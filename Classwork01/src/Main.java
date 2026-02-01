@@ -30,8 +30,8 @@ public class Main {
 
 
         //Clock assignment
-        float radius = 100;
-        float smallRadius = 75;
+        float radius = (float) imagesArray.get(1).getWidth()/4;;
+        float smallRadius = (float) imagesArray.get(1).getWidth()/5;
         float height = (float) imagesArray.get(1).getHeight() /2;
         float width = (float) imagesArray.get(1).getWidth()/2;
         int hour = 10;
@@ -57,8 +57,8 @@ public class Main {
         }
 
         //To set up the time given the variables above.
-        int hourRadius = 50;
-        int minuteRadius = 75;
+        float hourRadius = (float) imagesArray.get(1).getWidth()/8;
+        float minuteRadius = (float) imagesArray.get(1).getWidth()/5;
         double hourAngle = Math.toRadians( -90 + ((hour%12)*30));
         double minuteAngle = Math.toRadians( -90 + ((minute%60)*6));
 
@@ -81,6 +81,57 @@ public class Main {
 
         //Code for the landscape
 
+        //Background and grass
+        for (int y = 0; y<imagesArray.get(2).getHeight(); y++){
+            for (int x = 0; x<imagesArray.get(2).getWidth(); x++){
+
+                //Checks with sine function to draw grass.
+                if ( y > (15*Math.sin(0.1*x) + 225)) {
+                    imagesArray.get(2).setRGB(x,y,Color.green.getRGB());
+                } else {
+                    imagesArray.get(2).setRGB(x,y,Color.white.getRGB());
+                }
+            }
+        }
+
+        //Code for sun
+        height = (float) imagesArray.get(2).getHeight()/5;
+        width = (float) imagesArray.get(2).getWidth()/6;
+
+        //Big sun rays
+        for (int theta = 0; theta<360; theta+=90) {
+            double thetaRadians = Math.toRadians( (double) theta);
+
+            for (int r = 0; r<height; r++){
+                int x = (int) (width + r*Math.cos(thetaRadians));
+                int y = (int) (height + r*Math.sin(thetaRadians));
+
+                imagesArray.get(2).setRGB(x,y,Color.red.getRGB());
+            }
+        }
+
+        //Small sun rays
+        for (int theta = 45; theta<360; theta+=90) {
+            double thetaRadians = Math.toRadians( (double) theta);
+
+            for (int r = 0; r<50; r++){
+                int x = (int) (width + r*Math.cos(thetaRadians));
+                int y = (int) (height + r*Math.sin(thetaRadians));
+
+                imagesArray.get(2).setRGB(x,y,Color.red.getRGB());
+            }
+        }
+
+        //Sun circle
+        for (int theta = 0; theta < 360; theta++){
+            double thetaRadians = Math.toRadians( (double) theta);
+            for (int r = 0; r < 40; r++){
+                int x = (int) (width + r*Math.cos(thetaRadians));
+                int y = (int) (height + r*Math.sin(thetaRadians));
+
+                imagesArray.get(2).setRGB(x,y,Color.yellow.getRGB());
+            }
+        }
 
         //Code block to print all three images at the same time
         for (int i = 0; i < 3; i++) {
