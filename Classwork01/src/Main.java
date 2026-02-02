@@ -34,8 +34,8 @@ public class Main {
         float smallRadius = (float) imagesArray.get(1).getWidth()/5;
         float height = (float) imagesArray.get(1).getHeight() /2;
         float width = (float) imagesArray.get(1).getWidth()/2;
-        int hour = 10;
-        int minute = 5;
+        int hour = 6;
+        int minute = 22;
 
         //Code for the clock's circle
         for (double theta = 0; theta < 360; theta+=(1/radius)){
