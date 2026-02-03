@@ -3,12 +3,9 @@ package Homework02_3;
 public class Coordinates {
     float r,theta, x,y;
 
-    public Coordinates(int x, int y){
+    public Coordinates(float x, float y, float r, float theta){
         this.x = x;
         this.y = y;
-    }
-
-    public Coordinates(float r, float theta){
         this.r = r;
         this.theta = theta;
     }

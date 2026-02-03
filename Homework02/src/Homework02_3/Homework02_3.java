@@ -25,13 +25,14 @@ public class Homework02_3 {
         if (option == 1) {
             x = InputHandler.inputFloat("Input x coordinate");
             y = InputHandler.inputFloat("Input y coordinate");
-            coords = new Coordinates(x,y);
+            coords = new Coordinates(x,y,0,0);
 
             coords.toPolar();
         } else {
+            //Conversion from polar to cartesian
             r = InputHandler.inputFloat("Input the radius");
             theta = InputHandler.inputFloat("Input the angle");
-            coords = new Coordinates(r,theta);
+            coords = new Coordinates(0,0,r,theta);
 
             coords.toCartesian();
         }
