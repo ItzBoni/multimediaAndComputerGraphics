@@ -28,14 +28,13 @@ public class Main {
             }
         }
 
-
         //Clock assignment
         float radius = (float) imagesArray.get(1).getWidth()/4;;
         float smallRadius = (float) imagesArray.get(1).getWidth()/5;
         float height = (float) imagesArray.get(1).getHeight() /2;
         float width = (float) imagesArray.get(1).getWidth()/2;
-        int hour = 6;
-        int minute = 22;
+        int hour = 10;
+        int minute = 5;
 
         //Code for the clock's circle
         for (double theta = 0; theta < 360; theta+=(1/radius)){
@@ -86,7 +85,7 @@ public class Main {
             for (int x = 0; x<imagesArray.get(2).getWidth(); x++){
 
                 //Checks with sine function to draw grass.
-                if ( y > (15*Math.sin(0.1*x) + 225)) {
+                if ( y > (15*Math.sin(0.1*x) + imagesArray.get(2).getHeight()/1.3)) {
                     imagesArray.get(2).setRGB(x,y,Color.green.getRGB());
                 } else {
                     imagesArray.get(2).setRGB(x,y,Color.white.getRGB());
@@ -114,7 +113,7 @@ public class Main {
         for (int theta = 45; theta<360; theta+=90) {
             double thetaRadians = Math.toRadians( (double) theta);
 
-            for (int r = 0; r<50; r++){
+            for (int r = 0; r<height; r++){
                 int x = (int) (width + r*Math.cos(thetaRadians));
                 int y = (int) (height + r*Math.sin(thetaRadians));
 
@@ -125,7 +124,7 @@ public class Main {
         //Sun circle
         for (int theta = 0; theta < 360; theta++){
             double thetaRadians = Math.toRadians( (double) theta);
-            for (int r = 0; r < 40; r++){
+            for (int r = 0; r < imagesArray.get(2).getHeight()/10; r++){
                 int x = (int) (width + r*Math.cos(thetaRadians));
                 int y = (int) (height + r*Math.sin(thetaRadians));
 
