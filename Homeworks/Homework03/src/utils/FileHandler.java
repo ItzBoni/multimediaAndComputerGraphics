@@ -10,6 +10,8 @@ import java.util.Scanner;
 public class FileHandler {
     public static void saveCompressedImage(String filename, int width, int height, Color[] palette, byte[] compressedData){
         // Try-with-resources ensures the file closes automatically
+        System.out.println("I'm in the image saver");
+
         try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(filename))) {
 
             // --- SECTION 1: THE HEADER ---
@@ -39,6 +41,7 @@ public class FileHandler {
 
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Didn't work lol");
         }
     }
 
@@ -72,21 +75,36 @@ public class FileHandler {
         }
     }
 
-    //Method to grab the image.
-    public static BufferedImage readImage(){
+    public static BufferedImage readImage() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Input the image filepath");
+        System.out.println("Input the image filepath:");
 
         String filepath = sc.nextLine();
+
+        // 1. CLEAN THE INPUT
+        // Remove double quotes (common if copying paths) and trim whitespace
+        filepath = filepath.replace("\"", "").trim();
+
+        System.out.println("Attempting to read from: [" + filepath + "]"); // DEBUG PRINT
+
         BufferedImage image = null;
 
         try {
             File file = new File(filepath);
+
+            // 2. VERIFY FILE EXISTENCE
+            if (!file.exists()) {
+                System.err.println("ERROR: File not found at that path.");
+                System.err.println("Check for typos or hidden file extensions.");
+                return null;
+            }
+
             image = ImageIO.read(file);
 
-            // Check if image loaded successfully
             if (image != null) {
-                System.out.println("Image loaded successfully!");
+                System.out.println("Image loaded successfully! (Width: " + image.getWidth() + ")");
+            } else {
+                System.err.println("ERROR: File exists, but it is not a valid image format.");
             }
         } catch (IOException e) {
             System.out.println("Error loading image: " + e.getMessage());

@@ -33,12 +33,23 @@ public class Compressor {
     private void setCompressedIndices(ArrayList<Integer> compressedIndices){ this.compressedIndices = compressedIndices; }
 
     public void compressImage(){
+        //compressionMask is part of my solution as a lossy compression algorithm.
+        //To be used with crushColor method
+
+        //SETTINGS:
+        // 0xFF = Lossless
+        // 0xF0 = High Quality (16 colors per channel)
+        // 0xE0 = Retro Look (8 colors per channel)
+
+        int compressionMask = 0xF0;
+
         //Add each unique color to a set
-        for (int x = 0; x < this.image.getWidth(); x++){
-            for (int y = 0; y < this.image.getHeight(); y++){
-                int pixelColor = this.image.getRGB(x,y);
-                Color color = new Color(pixelColor, true);
-                this.colors.add(color);
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++){
+                int pixelVal = image.getRGB(x,y);
+                Color crushed = BitShifter.crushColor(pixelVal, compressionMask);
+
+                this.colors.add(crushed);
             }
         }
 
@@ -56,16 +67,16 @@ public class Compressor {
         this.compressedIndices = new ArrayList<>();
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++){
-                int pixelColor = this.image.getRGB(x,y);
-                Color color = new Color(pixelColor, true);
-                int index = colorIndices.get(color);
+                int pixelVal = image.getRGB(x,y);
+                Color crushed = BitShifter.crushColor(pixelVal, compressionMask);
+                int index = colorIndices.get(crushed);
 
                 compressedIndices.add(index);
             }
         }
 
         //PACK BITS THIS IS THE MOST IMPORTANT STEP DON'T FAIL ON ME PLS
-        byte[] binaryData = BitPacker.packIndices(compressedIndices, bitsPerPixel);
+        byte[] binaryData = BitShifter.packIndices(compressedIndices, bitsPerPixel);
 
         //Construct final file
         FileHandler.saveCompressedImage(this.filename, this.image.getWidth(), this.image.getHeight(), colorArray, binaryData);
