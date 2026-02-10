@@ -10,19 +10,11 @@ public class Homework03 {
     public static void main(String[] args) throws IOException {
         BufferedImage image = FileHandler.readImage();
         Compressor comp = null;
-        String filepath = "C:/Users/luchy/OneDrive/Desktop/MULTIMEDIA AND COMPUTER GRAPHICS/Homeworks/Homework03/publicgamer.santi";
+        String imageName = "compressed_image";
 
         if (image != null){
-            comp = new Compressor(image, filepath);
+            comp = new Compressor(image, imageName);
             comp.compressImage();
-        }
-
-        BufferedImage recoveredImage = Decompressor.decompressImage(filepath);
-
-        // 3. Verify / Show
-        if (recoveredImage != null) {
-            // Pass it to your GUI or save it as png to verify
-            ImageIO.write(recoveredImage, "PNG", new File("verify.PNG"));
         }
     }
 }
