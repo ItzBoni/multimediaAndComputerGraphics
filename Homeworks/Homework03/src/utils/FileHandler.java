@@ -40,7 +40,6 @@ public class FileHandler {
 
         String filepath = sc.nextLine();
 
-        // 1. CLEAN THE INPUT
         // Remove double quotes (common if copying paths) and trim whitespace
         filepath = filepath.replace("\"", "").trim();
 
@@ -51,7 +50,7 @@ public class FileHandler {
         try {
             File file = new File(filepath);
 
-            // 2. VERIFY FILE EXISTENCE
+            //Verify file existence
             if (!file.exists()) {
                 System.err.println("ERROR: File not found at that path.");
                 System.err.println("Check for typos or hidden file extensions.");
