@@ -1,7 +1,4 @@
-package src.main.java.com.javafxdemo.first_midterm.utils;
-
-import org.jetbrains.annotations.NotNull;
-
+package com.javafxdemo.first_midterm.utils;
 import java.awt.image.BufferedImage;
 
 public class ImageTransformerTool implements ImageTransformer{
@@ -9,7 +6,7 @@ public class ImageTransformerTool implements ImageTransformer{
     private BufferedImage resultImage;
 
     //Constructor and setter(s)
-    public ImageTransformerTool(@NotNull BufferedImage image){
+    public ImageTransformerTool(BufferedImage image){
         setResultImage(new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB));
         java.awt.Graphics g = this.resultImage.getGraphics();
         g.drawImage(image, 0, 0, null);

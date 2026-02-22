@@ -1,4 +1,4 @@
-package src.main.java.com.javafxdemo.first_midterm.utils;
+package com.javafxdemo.first_midterm.utils;
 
 import java.awt.image.BufferedImage;
 
