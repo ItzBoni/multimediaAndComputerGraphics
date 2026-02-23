@@ -4,6 +4,6 @@ import java.awt.image.BufferedImage;
 
 public interface ImageTransformer {
     public void invertColors();
-    public void cut();
-    public void rotate();
+    public void cut(int x1, int y1, int x2, int y2);
+    public void rotate(int x1, int y1, int x2, int y2, double theta);
 }

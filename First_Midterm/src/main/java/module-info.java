@@ -2,6 +2,7 @@ module com.javafxdemo.first_midterm {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires javafx.swing;
 
     //requires org.kordamp.bootstrapfx.core;
 

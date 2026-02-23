@@ -63,4 +63,12 @@ public class MainController {
             this.views.get(i).setManaged(true);
         }
     }
+
+    public void setImageTransformer(ImageTransformer imageTransformer){
+        this.imageTransformer = imageTransformer;
+    }
+
+    public ImageTransformer getImageTransformer(){
+        return this.imageTransformer;
+    }
 }

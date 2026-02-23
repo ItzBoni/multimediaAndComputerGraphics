@@ -35,13 +35,18 @@ public class InitialMenuController {
         Stage currentStage = (Stage) source.getScene().getWindow();
         initialImage = FileHandler.importImage(currentStage);
 
-        // 2. ONLY initialize the tool if an image was actually selected
+        //Initialize the tool if an image was actually selected
         if (initialImage != null) {
             imageTransformer = new ImageTransformerTool(this.initialImage);
             System.out.println("Image loaded and Transformer initialized!");
             uploadText.setText("Image loaded and Transformer initialized");
+            father.setImageTransformer(imageTransformer);
+            father.navigateToView(1);
         }
 
         uploadButton.setVisible(false);
     }
+
+    @FXML
+    private void goToEditor(){ father.navigateToView(1); }
 }
