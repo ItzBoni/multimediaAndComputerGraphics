@@ -26,16 +26,41 @@ public class MainController {
     @FXML
     public void initialize() throws IOException{
         //Load initial view controller
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/javafxdemo/first_midterm/initial-menu.fxml"));
         views.put(0, loader.load());
         InitialMenuController initController = loader.getController();
-        this.imageTransformer = initController.getImageTransformer();
-        initController.setMainController(this);
+        if (initController != null) {
+            initController.setMainController(this);
+        }
 
         //Load editor view
-        loader = new FXMLLoader(getClass().getResource("/editor.fxml"));
+        loader = new FXMLLoader(getClass().getResource("/com/javafxdemo/first_midterm/editor.fxml"));
         views.put(1, loader.load());
         EditorController editor = loader.getController();
-        editor.setMainController(this);
+        if (editor != null) {
+            editor.setMainController(this);
+        }
+
+        addAllNodesToRoot();
+        navigateToView(0);
+    }
+
+    @FXML void addAllNodesToRoot(){
+        for(Node n: views.values()){
+            contentArea.getChildren().add(n);
+        }
+    }
+
+    @FXML public void navigateToView(Integer view){
+        for(Integer i : this.views.keySet()){
+            if (i != view){
+                this.views.get(i).setVisible(false);
+                this.views.get(i).setManaged(false);
+                continue;
+            }
+
+            this.views.get(i).setVisible(true);
+            this.views.get(i).setManaged(true);
+        }
     }
 }
