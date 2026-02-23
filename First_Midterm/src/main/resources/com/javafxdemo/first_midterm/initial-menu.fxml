@@ -5,10 +5,18 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.javafxdemo.first_midterm.controllers.InitialMenuController"
             prefHeight="400.0" prefWidth="600.0">
+
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <Label fx:id="uploadText"/>
+    <Button fx:id="uploadButton" text="Upload an image :)" onAction="#onUploadButtonClick"/>
 
 </AnchorPane>
