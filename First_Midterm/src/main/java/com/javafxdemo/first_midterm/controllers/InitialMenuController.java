@@ -14,11 +14,6 @@ public class InitialMenuController {
     ImageTransformer imageTransformer;
     BufferedImage initialImage;
 
-    //Non FXML methods here:
-    public ImageTransformer getImageTransformer(){
-        return this.imageTransformer;
-    }
-
     public void setMainController(MainController father){
         this.father = father;
     }
@@ -37,16 +32,12 @@ public class InitialMenuController {
 
         //Initialize the tool if an image was actually selected
         if (initialImage != null) {
-            imageTransformer = new ImageTransformerTool(this.initialImage);
-            System.out.println("Image loaded and Transformer initialized!");
+            this.imageTransformer = new ImageTransformerTool(this.initialImage);
             uploadText.setText("Image loaded and Transformer initialized");
-            father.setImageTransformer(imageTransformer);
-            father.navigateToView(1);
+            father.handleImageUpload(this.imageTransformer); //Sends the imageTransformer to the father
         }
 
         uploadButton.setVisible(false);
     }
 
-    @FXML
-    private void goToEditor(){ father.navigateToView(1); }
 }

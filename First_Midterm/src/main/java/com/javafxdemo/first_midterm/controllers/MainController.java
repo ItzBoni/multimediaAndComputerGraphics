@@ -19,6 +19,7 @@ public class MainController {
     private BufferedImage resultImage; // Result image to send back to the user
     private ImageTransformer imageTransformer; //Instanced as a member of the interface
     private HashMap<Integer, Node> views = new HashMap<>();
+    private EditorController editor;
 
     @FXML
     private StackPane contentArea;
@@ -36,9 +37,9 @@ public class MainController {
         //Load editor view
         loader = new FXMLLoader(getClass().getResource("/com/javafxdemo/first_midterm/editor.fxml"));
         views.put(1, loader.load());
-        EditorController editor = loader.getController();
-        if (editor != null) {
-            editor.setMainController(this);
+        this.editor = loader.getController();
+        if (this.editor != null) {
+            this.editor.setMainController(this);
         }
 
         addAllNodesToRoot();
@@ -58,17 +59,19 @@ public class MainController {
                 this.views.get(i).setManaged(false);
                 continue;
             }
-
             this.views.get(i).setVisible(true);
             this.views.get(i).setManaged(true);
         }
     }
 
-    public void setImageTransformer(ImageTransformer imageTransformer){
+    public void handleImageUpload(ImageTransformer imageTransformer){
         this.imageTransformer = imageTransformer;
-    }
 
-    public ImageTransformer getImageTransformer(){
-        return this.imageTransformer;
+        //Sets the image transformer in the editor
+        if(this.editor != null){
+            this.editor.setImageTransformer(this.imageTransformer);
+        }
+
+        navigateToView(1);
     }
 }
