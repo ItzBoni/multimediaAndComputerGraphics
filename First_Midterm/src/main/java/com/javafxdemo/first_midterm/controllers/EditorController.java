@@ -12,8 +12,9 @@ import javafx.scene.image.ImageView;
 import java.awt.image.BufferedImage;
 
 public class EditorController {
-    ImageTransformer imageTransformer;
-    MainController father;
+    private ImageTransformer imageTransformer;
+    private MainController father;
+    private double theta = 0;
 
     @FXML TextField initial_x;
     @FXML TextField initial_y;
@@ -22,12 +23,17 @@ public class EditorController {
     @FXML Button rotate;
     @FXML Button cut;
     @FXML Button invertColors;
-    @FXML ImageView imageViewer = new ImageView();
+    @FXML ImageView imageViewer;
     @FXML Label error;
 
     //Setters
     public void setImageTransformer(ImageTransformer imgTransformer){
         this.imageTransformer = imgTransformer;
+
+        //Assigns the iamge to the viewport after initialization
+        if (this.imageTransformer != null) {
+            updateImage();
+        }
     }
 
     public void setMainController(MainController father){
@@ -44,20 +50,30 @@ public class EditorController {
     }
 
     //Implementation of required editing functionality
+    @FXML
     protected void onRotateButtonClick(){
         try {
+            //Tries to parse the input into
             int x1 = Integer.parseInt(this.initial_x.getText());
             int y1 = Integer.parseInt(this.initial_y.getText());
             int x2 = Integer.parseInt(this.final_x.getText());
             int y2 = Integer.parseInt(this.final_y.getText());
 
-            //imageTransformer.rotate(x1, y1, x2, y2, );
+            //Auto-increments the angle of rotation
+            if (this.theta == (2 * Math.PI)){
+                this.theta = 0;
+            } else {
+                this.theta += (Math.PI / 2);
+            }
+
+            imageTransformer.rotate(x1, y1, x2, y2, this.theta);
             updateImage();
         }catch (NumberFormatException e){
             error.setText("Please input an Integer :)");
         }
     }
 
+    @FXML
     protected void onCutButtonClick(){
         try {
             int x1 = Integer.parseInt(this.initial_x.getText());
@@ -73,6 +89,7 @@ public class EditorController {
         }
     }
 
+    @FXML
     protected void onInvertButtonClick(){
         imageTransformer.invertColors();
         updateImage();

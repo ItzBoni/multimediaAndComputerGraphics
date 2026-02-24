@@ -1,14 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.javafxdemo.first_midterm.controllers.EditorController"
-            prefHeight="400.0" prefWidth="600.0">
+<HBox prefHeight="720.0" prefWidth="1200.0" spacing="10.0" xmlns="http://javafx.com/fxml/1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.javafxdemo.first_midterm.controllers.EditorController">
+    <children>
 
-</AnchorPane>
+        <StackPane fx:id="imageContainer" HBox.hgrow="ALWAYS" style="-fx-background-color: #2b2b2b;">
+            <children>
+                <ImageView fx:id="imageViewer"
+                           cache="true"
+                           preserveRatio="true"
+                           fitWidth="${imageContainer.width}"
+                           fitHeight="${imageContainer.height}" />
+            </children>
+        </StackPane>
+
+        <VBox alignment="TOP_CENTER" maxWidth="360.0" minWidth="300.0" spacing="15.0" HBox.hgrow="NEVER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <children>
+                <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Editor Controls" />
+
+                <Separator prefWidth="200.0" />
+
+                <HBox spacing="10.0">
+                    <children>
+                        <TextField fx:id="initial_x" promptText="Initial X" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="initial_y" promptText="Initial Y" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="10.0">
+                    <children>
+                        <TextField fx:id="final_x" promptText="Final X" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="final_y" promptText="Final Y" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+
+                <Button fx:id="rotate" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                        onAction="#onRotateButtonClick" text="Rotate (90°)" />
+
+                <Button fx:id="cut" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                        onAction="#onCutButtonClick" text="Cut Selection" />
+
+                <Button fx:id="invertColors" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                        onAction="#onInvertButtonClick" text="Invert Colors" />
+
+                <Region VBox.vgrow="ALWAYS" /> <Label fx:id="error" textFill="RED" wrapText="true" />
+            </children>
+        </VBox>
+    </children>
+</HBox>
