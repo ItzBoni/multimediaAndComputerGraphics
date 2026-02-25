@@ -52,7 +52,12 @@
                 <Button fx:id="invertColors" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
                         onAction="#onInvertButtonClick" text="Invert Colors" />
 
-                <Region VBox.vgrow="ALWAYS" /> <Label fx:id="error" textFill="RED" wrapText="true" />
+                <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" fx:id="imageSize"/>
+
+                <Region VBox.vgrow="ALWAYS" />
+                <Label fx:id="error" textFill="RED" wrapText="true" />
+                <Button fx:id="saveImage" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                        onAction="#onSaveButtonClick" text="Save Image" />
             </children>
         </VBox>
     </children>

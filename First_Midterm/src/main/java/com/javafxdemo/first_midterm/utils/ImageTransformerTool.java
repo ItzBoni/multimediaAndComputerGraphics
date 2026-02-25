@@ -48,7 +48,15 @@ public class ImageTransformerTool implements ImageTransformer{
     }
 
     @Override
-    public void cut(int x1, int y1, int x2, int y2){
+    public void cut(int x1, int y1, int x2, int y2) throws InvalidImageDimensionsException{
+        //VALIDATION: Check image bounds before doing any calculations
+        if (x1 < 0 || y1 < 0 || x2 > resultImage.getWidth() || y2 > resultImage.getHeight()){
+            throw new InvalidImageDimensionsException(
+                    String.format("Selection (%d,%d) to (%d,%d) is outside image bounds (%dx%d)",
+                            x1, y1, x2, y2, resultImage.getWidth(), resultImage.getHeight())
+            );
+        }
+
         BufferedImage temp = this.resultImage.getSubimage(x1,y1,(x2-x1),(y2-y1));
 
         this.resultImage = new BufferedImage(temp.getWidth(), temp.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -56,12 +64,25 @@ public class ImageTransformerTool implements ImageTransformer{
     }
 
     @Override
-    public void rotate(int x1, int y1, int x2, int y2, double theta){
+    public void rotate(int x1, int y1, int x2, int y2, double theta) throws InvalidImageDimensionsException{
+        //VALIDATION: Check image bounds before doing any calculations
+        if (x1 < 0 || y1 < 0 || x2 > resultImage.getWidth() || y2 > resultImage.getHeight()){
+            throw new InvalidImageDimensionsException(
+                    String.format("Selection (%d,%d) to (%d,%d) is outside image bounds (%dx%d)",
+                            x1, y1, x2, y2, resultImage.getWidth(), resultImage.getHeight())
+            );
+        }
+
+        //Calculate height and width
         int w = x2-x1;
         int h = y2-y1;
 
         //Stores what we're rotating in a temporary variable
-        BufferedImage temp = this.resultImage.getSubimage(x1,y1,w,h);
+        BufferedImage sub = this.resultImage.getSubimage(x1, y1, w, h);
+        BufferedImage temp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        java.awt.Graphics g = temp.getGraphics();
+        g.drawImage(sub, 0, 0, null);
+        g.dispose();
 
         //Paints the background of what's left black
         for (int x = x1; x < x2; x++){
