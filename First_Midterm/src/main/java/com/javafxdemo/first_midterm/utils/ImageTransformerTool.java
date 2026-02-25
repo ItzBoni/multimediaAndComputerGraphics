@@ -25,9 +25,11 @@ public class ImageTransformerTool implements ImageTransformer{
 
     //Overrides methods from ImageTransformer. Better code quality here :3
     @Override
-    public void invertColors(){
-        for (int x  = 0; x < this.resultImage.getWidth(); x++){
-            for (int y = 0; y < this.resultImage.getHeight(); y++){
+    public void invertColors(int x1, int y1, int x2, int y2) throws InvalidImageDimensionsException{
+        validateDimensions(x1, y1, x2, y2);
+
+        for (int x  = x1; x < x2; x++){
+            for (int y = y1; y < y2; y++){
                 //Separate every color channel of the pixel
                 int rgba = this.resultImage.getRGB(x, y);
                 int a = (rgba >> 24) & 0xFF;
@@ -49,13 +51,7 @@ public class ImageTransformerTool implements ImageTransformer{
 
     @Override
     public void cut(int x1, int y1, int x2, int y2) throws InvalidImageDimensionsException{
-        //VALIDATION: Check image bounds before doing any calculations
-        if (x1 < 0 || y1 < 0 || x2 > resultImage.getWidth() || y2 > resultImage.getHeight()){
-            throw new InvalidImageDimensionsException(
-                    String.format("Selection (%d,%d) to (%d,%d) is outside image bounds (%dx%d)",
-                            x1, y1, x2, y2, resultImage.getWidth(), resultImage.getHeight())
-            );
-        }
+        validateDimensions(x1, y1, x2, y2);
 
         BufferedImage temp = this.resultImage.getSubimage(x1,y1,(x2-x1),(y2-y1));
 
@@ -71,9 +67,7 @@ public class ImageTransformerTool implements ImageTransformer{
         int realY2 = Math.max(y1, y2);
 
         //VALIDATION: Check image bounds before doing any calculations
-        if (realX1 < 0 || realY1 < 0 || realX2 > resultImage.getWidth() || realY2 > resultImage.getHeight()) {
-            throw new InvalidImageDimensionsException("Selection is outside image bounds");
-        }
+        validateDimensions(realX1, realY1, realX2, realY2);
 
         double thetaRadians = Math.toRadians(theta);
 
@@ -131,5 +125,15 @@ public class ImageTransformerTool implements ImageTransformer{
         g2d.setClip(0, 0, this.resultImage.getWidth(), this.resultImage.getHeight());
         g2d.drawImage(rotatedSection, drawX, drawY, null);
         g2d.dispose();
+    }
+
+    //Method to validate dimensions
+    private void validateDimensions(int x1, int y1, int x2, int y2) throws InvalidImageDimensionsException{
+        if (x1 < 0 || y1 < 0 || x2 > resultImage.getWidth() || y2 > resultImage.getHeight()){
+            throw new InvalidImageDimensionsException(
+                    String.format("Selection (%d,%d) to (%d,%d) is outside image bounds (%dx%d)",
+                            x1, y1, x2, y2, resultImage.getWidth(), resultImage.getHeight())
+            );
+        }
     }
 }

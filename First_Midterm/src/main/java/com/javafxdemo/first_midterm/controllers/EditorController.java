@@ -109,15 +109,29 @@ public class EditorController {
 
     @FXML
     protected void onInvertButtonClick(){
-        imageTransformer.invertColors();
-        updateImage();
+        try {
+            int x1 = Integer.parseInt(this.initial_x.getText());
+            int y1 = Integer.parseInt(this.initial_y.getText());
+            int x2 = Integer.parseInt(this.final_x.getText());
+            int y2 = Integer.parseInt(this.final_y.getText());
+
+            imageTransformer.invertColors(x1, y1, x2, y2);
+
+            updateImage();
+        }catch (NumberFormatException e){
+            error.setText("Please input an Integer :)");
+        }catch (InvalidImageDimensionsException e){
+            error.setText("Input valid image coordinates");
+        }
     }
 
     @FXML
     protected void onSaveButtonClick(ActionEvent event){
+        //Grab the event
         Node source = (Node) event.getSource();
         Stage currentStage = (Stage) source.getScene().getWindow();
-        FileHandler.saveImage(this.imageTransformer.getResultImage(), currentStage);
+        String imageLocation = FileHandler.saveImage(this.imageTransformer.getResultImage(), currentStage);
+        error.setText(imageLocation);
     }
 
     @FXML
