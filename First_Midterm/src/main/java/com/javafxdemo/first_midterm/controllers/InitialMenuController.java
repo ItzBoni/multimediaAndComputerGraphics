@@ -36,8 +36,5 @@ public class InitialMenuController {
             uploadText.setText("Image loaded and Transformer initialized");
             father.handleImageUpload(this.imageTransformer); //Sends the imageTransformer to the father
         }
-
-        uploadButton.setVisible(false);
     }
-
 }

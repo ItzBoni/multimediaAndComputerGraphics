@@ -65,34 +65,43 @@ public class ImageTransformerTool implements ImageTransformer{
 
     @Override
     public void rotate(int x1, int y1, int x2, int y2, double theta) throws InvalidImageDimensionsException{
+        int realX1 = Math.min(x1, x2);
+        int realX2 = Math.max(x1, x2);
+        int realY1 = Math.min(y1, y2);
+        int realY2 = Math.max(y1, y2);
+
         //VALIDATION: Check image bounds before doing any calculations
-        if (x1 < 0 || y1 < 0 || x2 > resultImage.getWidth() || y2 > resultImage.getHeight()){
-            throw new InvalidImageDimensionsException(
-                    String.format("Selection (%d,%d) to (%d,%d) is outside image bounds (%dx%d)",
-                            x1, y1, x2, y2, resultImage.getWidth(), resultImage.getHeight())
-            );
+        if (realX1 < 0 || realY1 < 0 || realX2 > resultImage.getWidth() || realY2 > resultImage.getHeight()) {
+            throw new InvalidImageDimensionsException("Selection is outside image bounds");
         }
 
+        double thetaRadians = Math.toRadians(theta);
+
         //Calculate height and width
-        int w = x2-x1;
-        int h = y2-y1;
+        int w = realX2 - realX1;
+        int h = realY2 - realY1;
+        if (w <= 0 || h <= 0) return;
+
+        //Calculates the center of the image
+        double centerX = realX1 + (w / 2.0);
+        double centerY = realY1 + (h / 2.0);
 
         //Stores what we're rotating in a temporary variable
-        BufferedImage sub = this.resultImage.getSubimage(x1, y1, w, h);
+        BufferedImage sub = this.resultImage.getSubimage(realX1, realY1, w, h);
         BufferedImage temp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         java.awt.Graphics g = temp.getGraphics();
         g.drawImage(sub, 0, 0, null);
         g.dispose();
 
         //Paints the background of what's left black
-        for (int x = x1; x < x2; x++){
-            for (int y = y1; y < y2; y++){
+        for (int x = realX1; x < realX2; x++) {
+            for (int y = realY1; y < realY2; y++) {
                 this.resultImage.setRGB(x, y, Color.black.getRGB());
             }
         }
 
         // We use Math.round to handle floating point precision
-        int turns = (int) Math.round(theta / (Math.PI / 2)) % 4;
+        int turns = (int) Math.round(thetaRadians / (Math.PI / 2)) % 4;
         if (turns < 0) turns += 4;
 
         //Create the rotated section
@@ -115,8 +124,12 @@ public class ImageTransformerTool implements ImageTransformer{
         }
 
         //Overwrite the pixels in the new image
+        int drawX = (int) Math.round(centerX - (newW / 2.0));
+        int drawY = (int) Math.round(centerY - (newH / 2.0));
+
         java.awt.Graphics2D g2d = this.resultImage.createGraphics();
-        g2d.drawImage(rotatedSection, x1, y1, null);
+        g2d.setClip(0, 0, this.resultImage.getWidth(), this.resultImage.getHeight());
+        g2d.drawImage(rotatedSection, drawX, drawY, null);
         g2d.dispose();
     }
 }

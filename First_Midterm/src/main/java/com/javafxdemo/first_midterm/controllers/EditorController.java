@@ -18,12 +18,12 @@ import java.awt.image.BufferedImage;
 public class EditorController {
     private ImageTransformer imageTransformer;
     private MainController father;
-    private double theta = 0;
 
     @FXML TextField initial_x;
     @FXML TextField initial_y;
     @FXML TextField final_x;
     @FXML TextField final_y;
+    @FXML TextField angle;
     @FXML Button rotate;
     @FXML Button cut;
     @FXML Button invertColors;
@@ -60,6 +60,7 @@ public class EditorController {
 
         this.imageViewer.setImage(convertToFxImage(this.imageTransformer.getResultImage()));
         imageSize.setText(size);
+        error.setText("");
     }
 
     //Implementation of required editing functionality
@@ -71,18 +72,18 @@ public class EditorController {
             int y1 = Integer.parseInt(this.initial_y.getText());
             int x2 = Integer.parseInt(this.final_x.getText());
             int y2 = Integer.parseInt(this.final_y.getText());
+            double angleInput = Double.parseDouble(this.angle.getText());
 
-            //Auto-increments the angle of rotation
-            if (this.theta == (2 * Math.PI)){
-                this.theta = 0;
+            //Executes the function
+            if(angleInput % 90 == 0.0) {
+                imageTransformer.rotate(x1, y1, x2, y2, angleInput);
+                updateImage();
             } else {
-                this.theta += (Math.PI / 2);
+                error.setText("Input a valid angle");
             }
 
-            imageTransformer.rotate(x1, y1, x2, y2, this.theta);
-            updateImage();
         }catch (NumberFormatException e){
-            error.setText("Please input an Integer :)");
+            error.setText("Please input a number :)");
         } catch (InvalidImageDimensionsException e){
             error.setText("Input valid image coordinates");
         }

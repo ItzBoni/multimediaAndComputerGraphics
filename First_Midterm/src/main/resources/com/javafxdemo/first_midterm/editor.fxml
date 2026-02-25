@@ -48,12 +48,18 @@
                                            style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5;" />
                             </children>
                         </HBox>
+                        <HBox spacing="10.0">
+                        <children>
+                            <TextField fx:id="angle" promptText="Rotation Angle" HBox.hgrow="ALWAYS"
+                                       style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5;" />
+                        </children>
+                    </HBox>
                     </children>
                 </VBox>
 
                 <VBox spacing="12.0">
                     <children>
-                        <Button fx:id="rotate" maxWidth="1.7976931348623157E308" onAction="#onRotateButtonClick" text="Rotate 90°"
+                        <Button fx:id="rotate" maxWidth="1.7976931348623157E308" onAction="#onRotateButtonClick" text="Rotate"
                                 style="-fx-background-color: #444444; -fx-text-fill: white; -fx-cursor: hand;" />
                         <Button fx:id="cut" maxWidth="1.7976931348623157E308" onAction="#onCutButtonClick" text="Cut Selection"
                                 style="-fx-background-color: #444444; -fx-text-fill: white; -fx-cursor: hand;" />
