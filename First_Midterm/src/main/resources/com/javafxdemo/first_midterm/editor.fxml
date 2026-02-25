@@ -4,60 +4,93 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<HBox prefHeight="720.0" prefWidth="1200.0" spacing="10.0" xmlns="http://javafx.com/fxml/1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.javafxdemo.first_midterm.controllers.EditorController">
+<HBox prefHeight="720.0" prefWidth="1200.0" style="-fx-background-color: #1a1a1a;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.javafxdemo.first_midterm.controllers.EditorController">
     <children>
 
-        <StackPane fx:id="imageContainer" HBox.hgrow="ALWAYS" style="-fx-background-color: #2b2b2b;">
+        <StackPane fx:id="imageContainer" HBox.hgrow="ALWAYS" minWidth="0" minHeight="0" style="-fx-background-color: #111111; -fx-border-color: #333333; -fx-border-width: 0 1 0 0;">
             <children>
-                <ImageView fx:id="imageViewer"
-                           cache="true"
-                           preserveRatio="true"
-                           fitWidth="${imageContainer.width}"
-                           fitHeight="${imageContainer.height}" />
+                <ImageView fx:id="imageViewer" cache="true" preserveRatio="true" smooth="true"
+                           fitWidth="${imageContainer.width}" fitHeight="${imageContainer.height}"/>
             </children>
         </StackPane>
 
-        <VBox alignment="TOP_CENTER" maxWidth="360.0" minWidth="300.0" spacing="15.0" HBox.hgrow="NEVER">
+        <VBox alignment="TOP_CENTER" maxWidth="360.0" minWidth="300.0" prefWidth="300.0" spacing="20.0" HBox.hgrow="NEVER">
             <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
             </padding>
             <children>
-                <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Editor Controls" />
+                <Label text="EDITOR CONTROLS" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="18.0" />
+                    </font>
+                </Label>
 
-                <Separator prefWidth="200.0" />
+                <Separator prefWidth="200.0" style="-fx-opacity: 0.3;" />
 
-                <HBox spacing="10.0">
+                <VBox spacing="10.0">
                     <children>
-                        <TextField fx:id="initial_x" promptText="Initial X" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="initial_y" promptText="Initial Y" HBox.hgrow="ALWAYS" />
+                        <Label text="Selection Area (Pixels)" textFill="#888888" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <TextField fx:id="initial_x" promptText="Start X" HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5;" />
+                                <TextField fx:id="initial_y" promptText="Start Y" HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5;" />
+                            </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                            <children>
+                                <TextField fx:id="final_x" promptText="End X" HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5;" />
+                                <TextField fx:id="final_y" promptText="End Y" HBox.hgrow="ALWAYS"
+                                           style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-prompt-text-fill: #666666; -fx-background-radius: 5;" />
+                            </children>
+                        </HBox>
                     </children>
-                </HBox>
+                </VBox>
 
-                <HBox spacing="10.0">
+                <VBox spacing="12.0">
                     <children>
-                        <TextField fx:id="final_x" promptText="Final X" HBox.hgrow="ALWAYS" />
-                        <TextField fx:id="final_y" promptText="Final Y" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="rotate" maxWidth="1.7976931348623157E308" onAction="#onRotateButtonClick" text="Rotate 90°"
+                                style="-fx-background-color: #444444; -fx-text-fill: white; -fx-cursor: hand;" />
+                        <Button fx:id="cut" maxWidth="1.7976931348623157E308" onAction="#onCutButtonClick" text="Cut Selection"
+                                style="-fx-background-color: #444444; -fx-text-fill: white; -fx-cursor: hand;" />
+                        <Button fx:id="invertColors" maxWidth="1.7976931348623157E308" onAction="#onInvertButtonClick" text="Invert Colors"
+                                style="-fx-background-color: #444444; -fx-text-fill: white; -fx-cursor: hand;" />
                     </children>
-                </HBox>
+                </VBox>
 
-                <Button fx:id="rotate" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                        onAction="#onRotateButtonClick" text="Rotate (90°)" />
+                <Separator prefWidth="200.0" style="-fx-opacity: 0.1;" />
 
-                <Button fx:id="cut" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                        onAction="#onCutButtonClick" text="Cut Selection" />
-
-                <Button fx:id="invertColors" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                        onAction="#onInvertButtonClick" text="Invert Colors" />
-
-                <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" fx:id="imageSize"/>
+                <VBox alignment="CENTER" spacing="5.0">
+                    <children>
+                        <Label text="CURRENT RESOLUTION" textFill="#666666">
+                            <font>
+                                <Font size="10.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="imageSize" text="0 x 0 px" textFill="#3a7afe">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
-                <Label fx:id="error" textFill="RED" wrapText="true" />
-                <Button fx:id="saveImage" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                        onAction="#onSaveButtonClick" text="Save Image" />
+
+                <Label fx:id="error" textFill="#ff5555" wrapText="true" alignment="CENTER" textAlignment="CENTER" />
+
+                <VBox spacing="10.0">
+                    <children>
+                        <Button fx:id="saveImage" maxWidth="1.7976931348623157E308" onAction="#onSaveButtonClick" text="SAVE IMAGE"
+                                style="-fx-background-color: #3a7afe; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-radius: 8;" />
+                        <Button fx:id="backToMenu" maxWidth="1.7976931348623157E308" onAction="#onBackToMenuButtonClick" text="Back to Menu"
+                                style="-fx-background-color: transparent; -fx-text-fill: #888888; -fx-border-color: #444444; -fx-border-radius: 8; -fx-cursor: hand;" />
+                    </children>
+                </VBox>
             </children>
         </VBox>
     </children>

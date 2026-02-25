@@ -1,22 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.javafxdemo.first_midterm.controllers.InitialMenuController"
-            prefHeight="400.0" prefWidth="600.0">
+<VBox alignment="CENTER" spacing="30.0"
+      style="-fx-background-color: #1a1a1a;"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.javafxdemo.first_midterm.controllers.InitialMenuController"
+      prefHeight="720.0" prefWidth="1200.0">
 
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0"/>
     </padding>
 
-    <Label fx:id="uploadText"/>
-    <Button fx:id="uploadButton" text="Upload an image :)" onAction="#onUploadButtonClick"/>
+    <children>
+        <VBox alignment="CENTER" spacing="10.0">
+            <children>
+                <Label text="IMAGE TRANSFORMER PRO" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="48.0" />
+                    </font>
+                </Label>
+                <Label text="Rotate. Cut. Invert. Repeat." textFill="#888888">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+            </children>
+        </VBox>
 
-</AnchorPane>
+        <VBox alignment="CENTER" spacing="20.0"
+              style="-fx-background-color: #2b2b2b; -fx-background-radius: 20; -fx-border-color: #444444; -fx-border-radius: 20;"
+              maxWidth="500.0" prefHeight="300.0">
+            <padding>
+                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+            </padding>
+            <children>
+                <Label text="📁" style="-fx-font-size: 64px;" />
+
+                <Label fx:id="uploadText" text="No image selected" textFill="#aaaaaa">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+
+                <Button fx:id="uploadButton"
+                        text="UPLOAD IMAGE"
+                        onAction="#onUploadButtonClick"
+                        style="-fx-background-color: #3a7afe; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 30 12 30; -fx-background-radius: 10; -fx-cursor: hand;" />
+            </children>
+        </VBox>
+
+        <Label text="Supports JPG, PNG, and BMP" textFill="#555555" />
+    </children>
+</VBox>

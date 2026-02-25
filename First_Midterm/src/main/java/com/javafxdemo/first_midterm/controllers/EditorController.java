@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.awt.image.BufferedImage;
@@ -27,7 +28,9 @@ public class EditorController {
     @FXML Button cut;
     @FXML Button invertColors;
     @FXML Button saveImage;
+    @FXML Button backToMenu;
     @FXML ImageView imageViewer;
+    @FXML StackPane imageContainer;
     @FXML Label error;
     @FXML Label imageSize;
 
@@ -114,5 +117,10 @@ public class EditorController {
         Node source = (Node) event.getSource();
         Stage currentStage = (Stage) source.getScene().getWindow();
         FileHandler.saveImage(this.imageTransformer.getResultImage(), currentStage);
+    }
+
+    @FXML
+    protected void onBackToMenuButtonClick(){
+        father.navigateToView(0);
     }
 }
