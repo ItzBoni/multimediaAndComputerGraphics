@@ -52,6 +52,7 @@ public class ImageTransformerTool implements ImageTransformer{
         BufferedImage temp = this.resultImage.getSubimage(x1,y1,(x2-x1),(y2-y1));
 
         this.resultImage = new BufferedImage(temp.getWidth(), temp.getHeight(), BufferedImage.TYPE_INT_RGB);
+        this.resultImage = temp;
     }
 
     @Override
