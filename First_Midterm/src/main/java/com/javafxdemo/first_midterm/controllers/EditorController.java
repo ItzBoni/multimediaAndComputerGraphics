@@ -38,7 +38,7 @@ public class EditorController {
     public void setImageTransformer(ImageTransformer imgTransformer){
         this.imageTransformer = imgTransformer;
 
-        //Assigns the iamge to the viewport after initialization
+        //Assigns the image to the viewport after initialization
         if (this.imageTransformer != null) {
             updateImage();
         }
