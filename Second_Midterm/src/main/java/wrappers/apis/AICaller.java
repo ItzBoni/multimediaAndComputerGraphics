@@ -1,4 +1,4 @@
-package wrappers.ai;
+package wrappers.apis;
 
 public class AICaller {
 }
