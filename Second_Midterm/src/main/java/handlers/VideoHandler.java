@@ -1,6 +1,5 @@
-package utils.handlers;
+package handlers;
 
-import wrappers.FFmpeg;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Base64;
@@ -47,16 +46,9 @@ public class VideoHandler implements FileHandler {
             return false;
         }
     }
-    /*
-    public String extractAudio(File destination) {
-        return FFmpeg.extractAudio(videoBytes, destination);
-    }*/
 
     public byte[] getVideoBytes()           { return videoBytes; }
     public void setVideoBytes(byte[] bytes) { this.videoBytes = bytes; }
-
-    @Override public FileType getFileType() { return fileType; }
-    @Override public boolean isLoaded()     { return videoBytes != null; }
 
     private FileType detectFileType(File file) {
         String name = file.getName().toLowerCase();

@@ -1,4 +1,4 @@
-package utils.handlers;
+package handlers;
 
 import wrappers.ExifTools;
 import javax.imageio.ImageIO;
@@ -67,9 +67,6 @@ public class ImageHandler implements FileHandler {
 
     public BufferedImage getImage()           { return image; }
     public void setImage(BufferedImage image) { this.image = image; }
-
-    @Override public FileType getFileType()   { return fileType; }
-    @Override public boolean isLoaded()       { return image != null; }
 
     private FileType detectFileType(File file) {
         String name = file.getName().toLowerCase();

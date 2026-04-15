@@ -1,5 +1,8 @@
+import handlers.FileHandler;
+import handlers.ImageHandler;
+
 public class App {
     public static void main(String[] args) {
-        System.out.println("Puto el que lo lea");
+        FileHandler test = new ImageHandler();
     }
 }

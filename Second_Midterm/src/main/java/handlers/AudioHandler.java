@@ -1,4 +1,4 @@
-package utils.handlers;
+package handlers;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -49,9 +49,6 @@ public class AudioHandler implements FileHandler {
 
     public byte[] getAudioBytes()           { return audioBytes; }
     public void setAudioBytes(byte[] bytes) { this.audioBytes = bytes; }
-
-    @Override public FileType getFileType() { return fileType; }
-    @Override public boolean isLoaded()     { return audioBytes != null; }
 
     private FileType detectFileType(File file) {
         String name = file.getName().toLowerCase();
