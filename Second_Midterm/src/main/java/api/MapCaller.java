@@ -1,13 +1,22 @@
 package api;
 
-public class MapCaller {
+public class MapCaller implements Connectable{
     ProcessBuilder command;
+    private String apiKey;
 
-    public MapCaller(){
-        setCommand(new ProcessBuilder());
+
+    @Override
+    public String escapeJson(String s){
+        return s
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 
-    private void setCommand(ProcessBuilder pb){
-        this.command = pb;
+    @Override
+    public void setApiKey(String token){
+        this.apiKey = token;
     }
 }
