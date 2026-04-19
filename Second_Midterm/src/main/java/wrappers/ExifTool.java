@@ -5,9 +5,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 
-public class ExifTools {
+public class ExifTool {
     public static boolean convertToJpg(BufferedImage image, File destination) {
         return false;
     }
@@ -15,7 +14,7 @@ public class ExifTools {
     public static String extractMetadata(String fileLocation){
         String metadata = null;
         StringBuilder response = new StringBuilder();
-        ProcessBuilder pb = new ProcessBuilder("exiftools", fileLocation);
+        ProcessBuilder pb = new ProcessBuilder("exiftool", fileLocation);
         pb.redirectErrorStream(true);
 
         try {
@@ -34,6 +33,7 @@ public class ExifTools {
         }
 
         metadata = response.toString();
+        System.out.println(metadata);
 
         return metadata;
     }

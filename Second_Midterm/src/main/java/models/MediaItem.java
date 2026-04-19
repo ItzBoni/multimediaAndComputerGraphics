@@ -1,6 +1,7 @@
 package models;
 
-import wrappers.ExifTools;
+import wrappers.ExifTool;
+import wrappers.FFmpeg;
 
 import java.io.File;
 import java.time.Instant;
@@ -18,7 +19,6 @@ public class MediaItem {
         Arrays.asList("mp4", "mov", "avi", "mkv", "flv", "webm")
     );
 
-    // Not final — assigned inside setAttributes(), called from constructor
     private File file;
     private boolean isVideo;
     private LocalDateTime createdAt;
@@ -32,13 +32,11 @@ public class MediaItem {
         setAttributes(fileLocation);
     }
 
-    // ── attribute parsing ────────────────────────────────────────────────────
-
     public void setAttributes(String fileLocation) {
         this.file    = new File(fileLocation);
         this.isVideo = isVideoFile(this.file);
 
-        String raw  = ExifTools.extractMetadata(fileLocation);
+        String raw  = ExifTool.extractMetadata(fileLocation);
         this.gpsLat = parseGPS(raw, "GPS Latitude");
         this.gpsLon = parseGPS(raw, "GPS Longitude");
 
@@ -62,7 +60,7 @@ public class MediaItem {
         int end = Math.min(colonIdx + 2 + 60, raw.length());
         String slice = raw.substring(colonIdx + 2, end);
 
-        // Match:  19 deg 26' 0.00" N
+        // Match the pattern with Regex
         Pattern p = Pattern.compile("(\\d+) deg (\\d+)' ([\\d.]+)\" ([NSEW])");
         Matcher m = p.matcher(slice);
         if (!m.find()) return 0.0;
@@ -118,27 +116,29 @@ public class MediaItem {
             Instant.ofEpochMilli(f.lastModified()), ZoneId.systemDefault());
     }
 
-    // ── late setters (filled in by the pipeline after construction) ──────────
+    public boolean hasGps() { return gpsLat != 0.0 || gpsLon != 0.0; }
+
+    public static boolean isVideoFile(File f) {
+        String name = f.getName().toLowerCase();
+        String directory = f.getAbsolutePath();
+
+        int dot = name.lastIndexOf('.');
+        if (dot < 0) return false;
+        else{
+            FFmpeg.saveRepresentativeFrame(directory);
+            return VIDEO_EXTS.contains(name.substring(dot + 1));
+        }
+    }
 
     public void setDescription(String d)       { this.description = d; }
     public void setRepresentativeFrame(File f) { this.representativeFrame = f; }
 
     // ── getters ──────────────────────────────────────────────────────────────
 
-    public File          getFile()                { return file; }
     public boolean       isVideo()                { return isVideo; }
     public LocalDateTime getCreatedAt()           { return createdAt; }
     public double        getGpsLat()              { return gpsLat; }
     public double        getGpsLon()              { return gpsLon; }
     public String        getDescription()         { return description; }
     public File          getRepresentativeFrame() { return representativeFrame; }
-
-    public boolean hasGps() { return gpsLat != 0.0 || gpsLon != 0.0; }
-
-    public static boolean isVideoFile(File f) {
-        String name = f.getName().toLowerCase();
-        int dot = name.lastIndexOf('.');
-        if (dot < 0) return false;
-        return VIDEO_EXTS.contains(name.substring(dot + 1));
-    }
 }
