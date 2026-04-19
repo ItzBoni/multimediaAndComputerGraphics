@@ -44,6 +44,7 @@ public class MediaItem {
             String framePath = frameDirectory + nameWithoutExt + "_repFrame.jpg";
 
             FFmpeg.saveRepresentativeFrame(this.file, framePath);
+            this.representativeFrame = new File(framePath);
         }
 
         String raw  = ExifTool.extractMetadata(fileLocation);
@@ -66,10 +67,11 @@ public class MediaItem {
 
     // ── getters ──────────────────────────────────────────────────────────────
 
-    public boolean       isVideo()                { return isVideo; }
-    public LocalDateTime getCreatedAt()           { return createdAt; }
-    public double        getGpsLat()              { return gpsLat; }
-    public double        getGpsLon()              { return gpsLon; }
-    public String        getDescription()         { return description; }
-    public File          getRepresentativeFrame() { return representativeFrame; }
+    public boolean isVideo() { return isVideo; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public double getGpsLat() { return gpsLat; }
+    public double getGpsLon() { return gpsLon; }
+    public String getDescription() { return description; }
+    public File getRepresentativeFrame() { return representativeFrame; }
+    public File getFile() { return file; }
 }
