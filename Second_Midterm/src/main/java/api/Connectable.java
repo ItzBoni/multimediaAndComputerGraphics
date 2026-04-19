@@ -10,6 +10,4 @@ public class Connectable {
                 .replace("\r", "\\r")
                 .replace("\t", "\\t");
     }
-
-    void setApiKey(String token){};
 }

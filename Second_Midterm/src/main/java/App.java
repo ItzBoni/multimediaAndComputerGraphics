@@ -15,8 +15,19 @@ public class App {
 
         // 4. Send to ChatGPT
         AICaller ai = new AICaller();
-        String description = ai.getDescription(base64);
-
+        String description = ai.descriptionRequest(base64);
         item.setDescription(description);
+
+        byte[] tts = ai.audioRequest(description);
+        String image = ai.imageRequest(description);
+
+        File audioFile = new File("C:/Users/luchy/Audio/output.mp3");
+        audioFile.getParentFile().mkdirs(); // Creates "Audio" folder if missing
+
+        File imageFile = new File("C:/Users/luchy/Images/output.jpg");
+        imageFile.getParentFile().mkdirs(); // Creates "Images" folder if missing
+
+        File decodedFile = ConversionHandler.decodeFromBase64(tts, audioFile);
+        File decodedImage = ConversionHandler.decodeFromBase64(image, imageFile);
     }
 }

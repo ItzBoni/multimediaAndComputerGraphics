@@ -23,24 +23,36 @@ public class ConversionHandler {
 
     public static File decodeFromBase64(String base64, File outputFile) {
         try {
-            byte[] bytes = Base64.getDecoder().decode(base64);
-            String ext = getExtension(outputFile);
-
-            if (IMAGE_EXTS.contains(ext)) {
-                BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
-                ImageIO.write(image, ext.equals("jpg") ? "jpeg" : ext, outputFile);
-            } else if (AUDIO_EXTS.contains(ext)) {
-                Files.write(outputFile.toPath(), bytes);
-            } else {
-                System.err.println("Unsupported file type: " + ext);
-                return null;
-            }
-
-            return outputFile;
+            return writeToFile(Base64.getDecoder().decode(base64), outputFile);
         } catch (Exception e) {
             System.err.println("Decoding failed: " + e.getMessage());
             return null;
         }
+    }
+
+    public static File decodeFromBase64(byte[] audioBytes, File outputFile) {
+        try {
+            return writeToFile(audioBytes, outputFile);
+        } catch (Exception e) {
+            System.err.println("Decoding failed: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private static File writeToFile(byte[] bytes, File outputFile) throws Exception {
+        String ext = getExtension(outputFile);
+
+        if (IMAGE_EXTS.contains(ext)) {
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+            ImageIO.write(image, ext.equals("jpg") ? "jpeg" : ext, outputFile);
+        } else if (AUDIO_EXTS.contains(ext)) {
+            Files.write(outputFile.toPath(), bytes);
+        } else {
+            System.err.println("Unsupported file type: " + ext);
+            return null;
+        }
+
+        return outputFile;
     }
 
     private static String getExtension(File file) {
