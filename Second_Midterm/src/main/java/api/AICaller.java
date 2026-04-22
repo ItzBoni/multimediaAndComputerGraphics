@@ -24,8 +24,24 @@ public class AICaller extends Connectable{
         {
             "model": "gpt-4o-mini",
             "messages": [
-              {"role": "user", "content": "Generate a 3 second description of the following image: %s"}
-            ]
+              {
+                "role": "user",
+                "content": [
+                  {
+                    "type": "image_url",
+                    "image_url": {
+                      "url": "data:image/jpeg;base64,%s",
+                      "detail": "low"
+                    }
+                  },
+                  {
+                    "type": "text",
+                    "text": "Generate a 3 second description of this image."
+                  }
+                ]
+              }
+            ],
+            "max_tokens": 100
         }""".formatted(base64Image);
 
         Map<String, String> headers = new HashMap<>();
