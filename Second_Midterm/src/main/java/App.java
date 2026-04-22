@@ -16,32 +16,32 @@ public class App {
         String directory;
         String fullDescription = "";
         String projectDirectory;
-        /*
+
         System.out.println("Welcome to the AI video generator :)");
 
         System.out.println("Please insert the directory where you want to store all project files");
         projectDirectory = sc.nextLine();
 
         System.out.println("Please input the directories of the files you want to add");
-        */
-        System.out.println("I'm starting here");
-        elements.add(new MediaItem("C:/Users/luchy/OneDrive/Pictures/project images/IMG_4457.heic"));
-        elements.add(new MediaItem("C:/Users/luchy/OneDrive/Pictures/project images/IMG_2831.heic"));
 
-        /*
-        do{
+        do {
             directory = sc.nextLine();
-            if(!directory.equals("exit")){
-                elements.add(new MediaItem(directory));
+            if (!directory.equals("exit")) {
+                try {
+                    elements.add(new MediaItem(directory));
+                    System.out.println("added new element");
+                } catch (RuntimeException e) {
+                    System.out.println("came into an error");
+                    System.out.println("Failed to load file: " + directory);
+                    System.out.println("Reason: " + e.getMessage());
+                }
             }
-        } while(!directory.equals("exit"));*/
+            System.out.println(directory);
+        } while (!directory.equals("exit"));
 
         sortByDate(elements);
 
-        System.out.println("Where the fuck am I stuck");
-
         for(MediaItem item : elements){
-            System.out.println("am I stuck here??");
             File fileToEncode = item.isVideo() ? item.getRepresentativeFrame() : item.getFile();
             String base64 = ConversionHandler.encodeToBase64(fileToEncode);
             System.out.println(base64);
@@ -51,36 +51,21 @@ public class App {
             fullDescription = fullDescription.concat(" "+description);
         }
 
-        System.out.println(fullDescription);
+        fullDescription = ai.mergeDescriptions(fullDescription);
+        byte[] tts = ai.audioRequest(fullDescription);
+        String image = ai.imageRequest(fullDescription);
 
-        /*
-        MediaItem item = new MediaItem("C:/Users/luchy/Videos/videochistoso.mp4");
-
-        File fileToEncode = item.isVideo() ? item.getRepresentativeFrame() : item.getFile();
-
-        // 3. Encode to Base64
-        String base64 = ConversionHandler.encodeToBase64(fileToEncode);
-
-        // 4. Send to ChatGPT
-        AICaller ai = new AICaller();
-        String description = ai.descriptionRequest(base64);
-        item.setDescription(description);
-
-        byte[] tts = ai.audioRequest(description);
-        String image = ai.imageRequest(description);
-
-        File audioFile = new File("C:/Users/luchy/Audio/output.mp3");
+        File audioFile = new File(projectDirectory+"output.mp3");
         audioFile.getParentFile().mkdirs(); // Creates "Audio" folder if missing
 
-        File imageFile = new File("C:/Users/luchy/Images/output.jpg");
+        File imageFile = new File(projectDirectory+"output.jpg");
         imageFile.getParentFile().mkdirs(); // Creates "Images" folder if missing
 
         File decodedFile = ConversionHandler.decodeByteResponse(tts, audioFile);
         File decodedImage = ConversionHandler.decodeByteResponse(image, imageFile);
-        */
-        /*
-        MediaItem img1 = new MediaItem("C:/Users/luchy/OneDrive/Pictures/project images/IMG_2831.heic");
-        MediaItem img2 = new MediaItem("C:/Users/luchy/OneDrive/Pictures/project images/IMG_4457.heic");
+
+        MediaItem img1 = elements.get(0);
+        MediaItem img2 = elements.get(1);
 
         MapCaller map = new MapCaller();
 
@@ -91,7 +76,6 @@ public class App {
         byte[] mapBytes = map.mapRequest(img1.getGps(), img2.getGps());
         File mapFile = new File("map.png");
         ConversionHandler.decodeByteResponse(mapBytes, mapFile);
-        */
     }
 
     private static void sortByDate(ArrayList<MediaItem> items) {
