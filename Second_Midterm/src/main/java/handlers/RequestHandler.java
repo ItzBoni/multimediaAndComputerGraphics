@@ -9,19 +9,59 @@ import java.util.Map;
 
 public class RequestHandler {
 
-    public static String sendHttpRequest(String url, String method, String jsonBody, Map<String, String> headers) {
-        return send(url, method, jsonBody, headers, HttpResponse.BodyHandlers.ofString());
+    /**
+     *
+     * @param url URL for the API connection.
+     * @param method "POST" || "GET".
+     * @param jsonBody JSON Body of the request, can be null for GET requests.
+     * @param headers Map of headers to include in the response. Can be any amount.
+     * @return response body as a String, or null if any error occurs.
+     * @throws IllegalArgumentException if the HTTP method is not supported.
+     */
+    public static String sendHttpRequest( String url, String method, String jsonBody, Map<String, String> headers) {
+        String response = null;
+
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(url));
+
+            // Add headers dynamically
+            if (headers != null) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    requestBuilder.header(entry.getKey(), entry.getValue());
+                }
+            }
+
+            // Handle method
+            if ("POST".equalsIgnoreCase(method)) {
+                requestBuilder.POST(HttpRequest.BodyPublishers.ofString(jsonBody != null ? jsonBody : ""));
+            } else if ("GET".equalsIgnoreCase(method)) {
+                requestBuilder.GET();
+            } else {
+                throw new IllegalArgumentException("Unsupported method: " + method);
+            }
+
+            HttpRequest request = requestBuilder.build();
+
+            HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            response = httpResponse.body();
+
+            System.out.println("Status Code: " + httpResponse.statusCode());
+            System.out.println("Response: " + response);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     public static byte[] sendHttpRequestBytes(String url, String method, String jsonBody, Map<String, String> headers) {
-        return send(url, method, jsonBody, headers, HttpResponse.BodyHandlers.ofByteArray());
-    }
-
-    //Use <T> to let Java decide what response format to send. Works in this use case.
-    private static <T> T send(String url, String method, String jsonBody, Map<String, String> headers,
-                              HttpResponse.BodyHandler<T> bodyHandler) {
         try {
             HttpClient client = HttpClient.newHttpClient();
+
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(url));
 
             if (headers != null) {
@@ -38,13 +78,18 @@ public class RequestHandler {
                 throw new IllegalArgumentException("Unsupported method: " + method);
             }
 
-            HttpResponse<T> httpResponse = client.send(requestBuilder.build(), bodyHandler);
+            HttpRequest request = requestBuilder.build();
+
+            HttpResponse<byte[]> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
             System.out.println("Status Code: " + httpResponse.statusCode());
+
             return httpResponse.body();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 }
