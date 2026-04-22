@@ -14,29 +14,44 @@ public class MetadataParser {
      * Converts DMS → decimal degrees; negates for S or W.
      */
     public static double parseGPS(String raw, String tagName) {
-        int tagIdx = raw.indexOf(tagName);
-        if (tagIdx < 0) return 0.0;
+        int searchFrom = 0;
+        int tagIdx;
 
-        int colonIdx = raw.indexOf(": ", tagIdx + tagName.length());
-        if (colonIdx < 0) return 0.0;
+        while ((tagIdx = raw.indexOf(tagName, searchFrom)) >= 0) {
+            if (tagIdx > 0 && raw.charAt(tagIdx - 1) != '\n') {
+                searchFrom = tagIdx + 1;
+                continue;
+            }
 
-        // Grab enough characters to cover the DMS value
-        int end = Math.min(colonIdx + 2 + 60, raw.length());
-        String slice = raw.substring(colonIdx + 2, end);
+            int afterTag = tagIdx + tagName.length();
+            int peekIdx = afterTag;
+            while (peekIdx < raw.length() && raw.charAt(peekIdx) == ' ') peekIdx++;
+            if (peekIdx < raw.length() && Character.isLetter(raw.charAt(peekIdx))) {
+                searchFrom = tagIdx + 1;
+                continue;
+            }
 
-        // Match the pattern with Regex
-        Pattern p = Pattern.compile("(\\d+) deg (\\d+)' ([\\d.]+)\" ([NSEW])");
-        Matcher m = p.matcher(slice);
-        if (!m.find()) return 0.0;
+            int colonIdx = raw.indexOf(": ", tagIdx + tagName.length());
+            if (colonIdx < 0) return 0.0;
 
-        double degrees = Double.parseDouble(m.group(1));
-        double minutes = Double.parseDouble(m.group(2));
-        double seconds = Double.parseDouble(m.group(3));
-        String dir     = m.group(4);
+            int end = Math.min(colonIdx + 2 + 60, raw.length());
+            String slice = raw.substring(colonIdx + 2, end);
 
-        double decimal = degrees + minutes / 60.0 + seconds / 3600.0;
-        if (dir.equals("S") || dir.equals("W")) decimal = -decimal;
-        return decimal;
+            Pattern p = Pattern.compile("(\\d+) deg (\\d+)' ([\\d.]+)\" ([NSEW])");
+            Matcher m = p.matcher(slice);
+            if (!m.find()) return 0.0;
+
+            double degrees = Double.parseDouble(m.group(1));
+            double minutes = Double.parseDouble(m.group(2));
+            double seconds = Double.parseDouble(m.group(3));
+            String dir     = m.group(4);
+
+            double decimal = degrees + minutes / 60.0 + seconds / 3600.0;
+            if (dir.equals("S") || dir.equals("W")) decimal = -decimal;
+            return decimal;
+        }
+
+        return 0.0;
     }
 
     /**

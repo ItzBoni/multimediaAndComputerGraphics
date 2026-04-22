@@ -71,6 +71,9 @@ public class MediaItem {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public double getGpsLat() { return gpsLat; }
     public double getGpsLon() { return gpsLon; }
+    public double[] getGps() {
+        return new double[]{this.gpsLat, this.gpsLon};
+    }
     public String getDescription() { return description; }
     public File getRepresentativeFrame() { return representativeFrame; }
     public File getFile() { return file; }

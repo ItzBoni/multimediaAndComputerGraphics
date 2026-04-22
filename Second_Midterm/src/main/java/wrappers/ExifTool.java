@@ -23,7 +23,7 @@ public class ExifTool {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                response.append(line);
+                response.append(line).append("\n");
             }
 
             process.waitFor();
@@ -33,7 +33,6 @@ public class ExifTool {
         }
 
         metadata = response.toString();
-        System.out.println(metadata);
 
         return metadata;
     }

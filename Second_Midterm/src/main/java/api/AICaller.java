@@ -1,6 +1,7 @@
 package api;
 
 import handlers.RequestHandler;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,9 +9,9 @@ import java.util.Map;
 public class AICaller extends Connectable{
     private String apiKey;
 
-    //Gets the token using encapsulation
     public AICaller(){
-        setApiKey(System.getenv("OpenAIToken"));
+        Dotenv dotenv = Dotenv.load();
+        setApiKey(dotenv.get("OPENAI_API_KEY"));
     }
 
     public void setApiKey(String token){

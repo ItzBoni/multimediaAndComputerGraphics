@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class ConversionHandler {
 
-    private static final Set<String> IMAGE_EXTS = Set.of("jpg", "jpeg", "png", "gif", "bmp", "webp");
+    private static final Set<String> IMAGE_EXTS = Set.of("jpg", "jpeg", "png", "gif", "bmp", "webp", "heic");
     private static final Set<String> AUDIO_EXTS = Set.of("mp3", "wav", "aac", "flac", "ogg", "m4a");
 
     public static String encodeToBase64(File file) {
@@ -21,7 +21,7 @@ public class ConversionHandler {
         }
     }
 
-    public static File decodeFromBase64(String base64, File outputFile) {
+    public static File decodeByteResponse(String base64, File outputFile) {
         try {
             return writeToFile(Base64.getDecoder().decode(base64), outputFile);
         } catch (Exception e) {
@@ -30,9 +30,9 @@ public class ConversionHandler {
         }
     }
 
-    public static File decodeFromBase64(byte[] audioBytes, File outputFile) {
+    public static File decodeByteResponse(byte[] bytes, File outputFile) {
         try {
-            return writeToFile(audioBytes, outputFile);
+            return writeToFile(bytes, outputFile);
         } catch (Exception e) {
             System.err.println("Decoding failed: " + e.getMessage());
             return null;
