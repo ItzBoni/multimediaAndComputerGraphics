@@ -1,7 +1,6 @@
 package api;
 
 import handlers.RequestHandler;
-import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,18 +14,23 @@ import java.util.Map;
  * - Converting text to speech
  * - Generating images from prompts
  *
- * Loads API key from .env file at initialization.
+ * Loads API key from system environment variable at initialization.
  */
 public class AICaller extends Connectable{
     private String apiKey;
 
     /**
-     * Initializes AICaller and loads OpenAI API key from environment.
-     * Reads OPENAI_API_KEY from .env file.
+     * Initializes AICaller and loads OpenAI API key from system environment.
+     * Reads OpenAIToken environment variable.
+     *
+     * @throws RuntimeException if OpenAIToken environment variable is not set
      */
     public AICaller(){
-        Dotenv dotenv = Dotenv.load();
-        setApiKey(dotenv.get("OPENAI_API_KEY"));
+        String token = System.getenv("OpenAIToken");
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("OpenAIToken environment variable is not set");
+        }
+        setApiKey(token);
     }
 
     /**

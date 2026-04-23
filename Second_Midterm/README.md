@@ -57,10 +57,27 @@ The AI Video Generator pipeline automates the creation of multimedia presentatio
    ```
 
 3. **Set Up Environment Variables**
-   Create a `.env` file in the project root:
+   Set system environment variables for API keys:
+   
+   **Windows (Command Prompt):**
+   ```cmd
+   set OpenAIToken=your-api-key-here
+   set GeoapifyToken=your-map-api-key-here
+   java -cp target/classes App
    ```
-   OPENAI_API_KEY=your-api-key-here
-   MAP_API_KEY=your-map-api-key-here
+   
+   **Windows (PowerShell):**
+   ```powershell
+   $env:OpenAIToken="your-api-key-here"
+   $env:GeoapifyToken="your-map-api-key-here"
+   java -cp target/classes App
+   ```
+   
+   **macOS/Linux:**
+   ```bash
+   export OpenAIToken=your-api-key-here
+   export GeoapifyToken=your-map-api-key-here
+   java -cp target/classes App
    ```
 
 ### Build & Compile
@@ -72,8 +89,15 @@ mvn clean compile
 # Package the application
 mvn clean package
 
-# Run the application
+# Set environment variables and run (macOS/Linux)
+export OpenAIToken=your-api-key-here
+export GeoapifyToken=your-map-api-key-here
 java -cp target/classes App
+
+# Or for Windows Command Prompt:
+# set OpenAIToken=your-api-key-here
+# set GeoapifyToken=your-map-api-key-here
+# java -cp target/classes App
 ```
 
 ## Usage Guide
@@ -194,15 +218,17 @@ Second_Midterm/
 
 ## Configuration
 
-### Environment Variables (.env)
-```properties
-OPENAI_API_KEY=sk-...              # Your OpenAI API key
-MAP_API_KEY=your-map-api-key       # Map service API key (optional)
-```
+### Environment Variables
+The application requires two system environment variables to be set:
+
+- **OpenAIToken** - Your OpenAI API key (required)
+  - Get it from: https://platform.openai.com/account/api-keys
+  
+- **GeoapifyToken** - Your Geoapify map API key (required)
+  - Get it from: https://apidocs.geoapify.com/
 
 ### Maven Dependencies
 - **JUnit 5** - Testing framework
-- **dotenv-java** - Environment variable loading
 - **Java 17** - HTTP client (built-in)
 
 ## Output Files
@@ -232,11 +258,13 @@ exiftool -ver  # Test if installed correctly
 ```
 
 ### API Key Errors
-**Error**: "Invalid API key" or "401 Unauthorized"
+**Error**: "Invalid API key", "401 Unauthorized", or "environment variable is not set"
 **Solution**: 
-- Verify `OPENAI_API_KEY` is correctly set in `.env`
-- Ensure the key is valid and has available API credits
-- Check that the `.env` file is in the project root
+- Verify `OpenAIToken` and `GeoapifyToken` environment variables are set
+- Ensure the keys are valid and have available API credits
+- Check that environment variables are properly exported before running the application
+- **Windows**: Use `set` command or set in System Properties
+- **macOS/Linux**: Use `export` command or add to shell profile (~/.bashrc, ~/.zshrc)
 
 ### Out of Memory
 **Error**: "Exception in thread 'main' java.lang.OutOfMemoryError"

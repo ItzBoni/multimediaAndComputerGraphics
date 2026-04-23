@@ -1,7 +1,6 @@
 package api;
 
 import handlers.RequestHandler;
-import io.github.cdimascio.dotenv.Dotenv;
 import utils.GeoUtils;
 
 import java.util.HashMap;
@@ -17,18 +16,23 @@ import java.util.Map;
  * - Creating map request with start/end markers
  *
  * Geographic calculations are delegated to GeoUtils.
- * Loads API key from .env file at initialization.
+ * Loads API key from system environment variable at initialization.
  */
 public class MapCaller extends Connectable {
     private String apiKey;
 
     /**
-     * Initializes MapCaller and loads Geoapify API key from environment.
-     * Reads MAP_API_KEY from .env file.
+     * Initializes MapCaller and loads Geoapify API key from system environment.
+     * Reads GeoapifyToken environment variable.
+     *
+     * @throws RuntimeException if GeoapifyToken environment variable is not set
      */
     public MapCaller() {
-        Dotenv dotenv = Dotenv.load();
-        setApiKey(dotenv.get("MAP_API_KEY"));
+        String token = System.getenv("GeoapifyToken");
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("GeoapifyToken environment variable is not set");
+        }
+        setApiKey(token);
     }
 
     /**
