@@ -35,14 +35,20 @@ public class MediaPipeline {
 
             String description = ai.descriptionRequest(base64);
             item.setDescription(description);
-            item.setAudio(ai.audioRequest(description));
-            System.out.println("Setting audio for item");
+            System.out.println("Description set for item");
         }
 
         StringBuilder fullDescription = new StringBuilder();
         for (MediaItem item : elements) {
             fullDescription.append(item.getDescription());
         }
+
+        // Single merged TTS narration
+        String mergedNarration = ai.mergeDescriptions(fullDescription.toString());
+        byte[] audioBytes      = ai.audioRequest(mergedNarration);
+        File audioFile         = new File(projectDirectory + "narration.mp3");
+        audioFile.getParentFile().mkdirs();
+        ConversionHandler.decodeByteResponse(audioBytes, audioFile);
 
         // Representative image generation
         String image    = ai.imageRequest(fullDescription.toString());
@@ -57,10 +63,9 @@ public class MediaPipeline {
         ConversionHandler.decodeByteResponse(mapBytes, mapFile);
         MediaItem mapItem = new MediaItem(mapFile);
         mapItem.setDescription("Map visualization of route");
-        mapItem.setAudio(ai.audioRequest("Map visualization of route"));
         elements.add(mapItem);
 
-        VideoStitcher.stitch(elements, projectDirectory);
+        VideoStitcher.stitch(elements, projectDirectory, audioFile);
     }
 
     private static void sortByDate(ArrayList<MediaItem> items) {

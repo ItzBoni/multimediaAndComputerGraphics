@@ -25,7 +25,6 @@ public class MediaItem {
     private LocalDateTime createdAt;
     private double gpsLat;
     private double gpsLon;
-    private byte[] audio;
     private String description;
     private File representativeFrame;
 
@@ -55,7 +54,6 @@ public class MediaItem {
     public void setGpsLon(double lon)                    { this.gpsLon = lon; }
     public void setRepresentativeFrame(File f)           { this.representativeFrame = f; }
     public void setDescription(String d)                 { this.description = d; }
-    public void setAudio(byte[] audio)                   { this.audio = audio; }
 
     // ── getters ──────────────────────────────────────────────────────────────
 
@@ -67,5 +65,4 @@ public class MediaItem {
     public String getDescription()                       { return description; }
     public File getRepresentativeFrame()                 { return representativeFrame; }
     public File getFile()                                { return file; }
-    public byte[] getAudio()                             { return audio; }
 }

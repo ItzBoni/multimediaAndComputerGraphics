@@ -1,6 +1,5 @@
 package wrappers;
 
-import handlers.ConversionHandler;
 import models.MediaItem;
 
 import java.io.*;
@@ -10,69 +9,83 @@ import java.util.List;
 
 public class VideoStitcher {
 
-    public static void stitch(ArrayList<MediaItem> visualMedia, String directory) {
+    public static void stitch(ArrayList<MediaItem> visualMedia, String directory, File audioFile) {
         File outputDir = new File(directory);
         if (!outputDir.exists()) outputDir.mkdirs();
 
+        // Compute how many seconds each item should occupy
+        double totalSeconds  = Double.parseDouble(getVideoDuration(audioFile.getAbsolutePath()));
+        double durationEach  = totalSeconds / visualMedia.size();
+
+        // 1. Create one silent clip per item
         for (int i = 0; i < visualMedia.size(); i++) {
-            createTempFile(visualMedia.get(i), directory, i);
+            createTempFile(visualMedia.get(i), directory, i, durationEach);
         }
 
-        File outputFile = new File(outputDir, "final_voiced.mp4");
-        File concatList = buildMediaList(visualMedia, directory);
+        // 2. Concat silent clips → slideshow.mp4
+        File silentVideo = new File(outputDir, "slideshow.mp4");
+        File concatList  = buildMediaList(visualMedia, directory);
 
-        List<String> command = new ArrayList<>(Arrays.asList(
-                "ffmpeg",
-                "-loglevel", "error",
-                "-f", "concat",
-                "-safe", "0",
+        executeCommand(new ArrayList<>(Arrays.asList(
+                "ffmpeg", "-loglevel", "error",
+                "-f", "concat", "-safe", "0",
                 "-i", concatList.getAbsolutePath(),
+                "-c:v", "copy", "-an",
+                "-y", silentVideo.getAbsolutePath()
+        )), "Slideshow Concat");
+
+        // 3. Merge slideshow + single audio → final_voiced.mp4
+        File outputFile = new File(outputDir, "final_voiced.mp4");
+
+        executeCommand(new ArrayList<>(Arrays.asList(
+                "ffmpeg", "-loglevel", "error",
+                "-i", silentVideo.getAbsolutePath(),
+                "-i", audioFile.getAbsolutePath(),
                 "-c:v", "copy",
-                "-c:a", "aac",
-                "-b:a", "128k",
-                "-ar", "48000",
-                "-ac", "2",
-                "-y",
+                "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2",
+                "-shortest", "-y",
                 outputFile.getAbsolutePath()
-        ));
+        )), "Audio Merge");
 
-        executeCommand(command, "Final Stitch");
-
+        // 4. Cleanup
         for (int j = 0; j < visualMedia.size(); j++) {
             new File(outputDir, "temp_" + j + "_voiced.mp4").delete();
         }
         concatList.delete();
+        silentVideo.delete();
     }
 
-    private static void createTempFile(MediaItem visualMedia, String directory, int counter) {
-        byte[] tempAudio = visualMedia.getAudio();
-        File tempAudioFile = null;
-        File outputDir = new File(directory);
+    private static void createTempFile(MediaItem item, String directory, int counter, double duration) {
+        File outputDir  = new File(directory);
         File outputFile = new File(outputDir, "temp_" + counter + "_voiced.mp4");
-        String inputVideo = visualMedia.getFile().getAbsolutePath();
+
+        // For images use the file directly; for videos use the file directly (trimmed to duration)
+        String input = item.isVideo()
+                ? item.getFile().getAbsolutePath()
+                : (item.getRepresentativeFrame() != null
+                        ? item.getRepresentativeFrame().getAbsolutePath()
+                        : item.getFile().getAbsolutePath());
 
         List<String> command = new ArrayList<>();
-        command.addAll(Arrays.asList("ffmpeg", "-loglevel", "error", "-i", inputVideo));
-
-        command.addAll(Arrays.asList("-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo", "-map", "0:v:0", "-map", "1:a:0"));
+        if (!item.isVideo()) {
+            // -loop 1 turns a still image into an infinite video stream
+            command.addAll(Arrays.asList("ffmpeg", "-loglevel", "error", "-loop", "1", "-i", input));
+        } else {
+            command.addAll(Arrays.asList("ffmpeg", "-loglevel", "error", "-i", input));
+        }
 
         command.addAll(Arrays.asList(
+                "-t", String.valueOf(duration),
                 "-vf", "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,format=yuv420p",
                 "-c:v", "libx264",
                 "-preset", "ultrafast",
                 "-force_key_frames", "expr:gte(t,n_forced*2)",
-                "-c:a", "aac",
-                "-b:a", "128k",
-                "-shortest",
+                "-an",   // silent — audio is added in a single pass later
                 "-y",
                 outputFile.getAbsolutePath()
         ));
 
-        executeCommand(command, "Normalization #" + counter);
-
-        if (tempAudioFile != null && tempAudioFile.exists()) {
-            tempAudioFile.delete();
-        }
+        executeCommand(command, "Clip #" + counter);
     }
 
     private static String getVideoDuration(String videoPath) {
