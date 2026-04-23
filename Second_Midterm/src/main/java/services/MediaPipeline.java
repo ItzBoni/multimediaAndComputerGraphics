@@ -36,6 +36,7 @@ public class MediaPipeline {
             String description = ai.descriptionRequest(base64);
             item.setDescription(description);
             item.setAudio(ai.audioRequest(description));
+            System.out.println("Setting audio for item");
         }
 
         StringBuilder fullDescription = new StringBuilder();
@@ -54,7 +55,10 @@ public class MediaPipeline {
         byte[] mapBytes = map.mapRequest(elements.get(0).getGps(), elements.get(elements.size() - 1).getGps());
         File mapFile    = new File(projectDirectory + "map.png");
         ConversionHandler.decodeByteResponse(mapBytes, mapFile);
-        elements.add(MediaItemFactory.create(mapFile.getAbsolutePath()));
+        MediaItem mapItem = new MediaItem(mapFile);
+        mapItem.setDescription("Map visualization of route");
+        mapItem.setAudio(ai.audioRequest("Map visualization of route"));
+        elements.add(mapItem);
 
         VideoStitcher.stitch(elements, projectDirectory);
     }

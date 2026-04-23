@@ -2,6 +2,7 @@ import models.MediaItem;
 import models.MediaItemFactory;
 import services.MediaPipeline;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,6 +19,9 @@ public class App {
 
         System.out.println("Please insert the directory where you want to store all project files");
         String projectDirectory = sc.nextLine();
+        if (!projectDirectory.endsWith(File.separator)) {
+            projectDirectory += File.separator;
+        }
 
         System.out.println("Please input the directories of the files you want to add");
 

@@ -31,7 +31,7 @@ public class MediaItemFactory {
             String fileName  = file.getName();
             String nameNoExt = fileName.substring(0, fileName.lastIndexOf('.'));
             String dir       = fileLocation.substring(0, fileLocation.length() - fileName.length());
-            File converted   = ExifTool.convertToJpeg(file, dir + nameNoExt + "_converted.jpg");
+            File converted   = FFmpeg.convertHeicToJpeg(file, dir + nameNoExt + "_converted.jpg");
             item.setFile(converted);
         }
 

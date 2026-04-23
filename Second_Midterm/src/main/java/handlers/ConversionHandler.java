@@ -22,19 +22,27 @@ public class ConversionHandler {
     }
 
     public static File decodeByteResponse(String base64, File outputFile) {
+        if (base64 == null) {
+            System.err.println("Decoding failed for " + outputFile.getName() + ": received null base64 string");
+            return null;
+        }
         try {
             return writeToFile(Base64.getDecoder().decode(base64), outputFile);
         } catch (Exception e) {
-            System.err.println("Decoding failed: " + e.getMessage());
+            System.err.println("Decoding failed for " + outputFile.getName() + ": " + e.getMessage());
             return null;
         }
     }
 
     public static void decodeByteResponse(byte[] bytes, File outputFile) {
+        if (bytes == null) {
+            System.err.println("Decoding failed for " + outputFile.getName() + ": received null byte array");
+            return;
+        }
         try {
             writeToFile(bytes, outputFile);
         } catch (Exception e) {
-            System.err.println("Decoding failed: " + e.getMessage());
+            System.err.println("Decoding failed for " + outputFile.getName() + ": " + e.getMessage());
         }
     }
 
@@ -43,6 +51,9 @@ public class ConversionHandler {
 
         if (IMAGE_EXTS.contains(ext)) {
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
+            if (image == null) {
+                throw new Exception("ImageIO could not decode bytes as " + ext + " — data may be corrupt or wrong format");
+            }
             ImageIO.write(image, ext.equals("jpg") ? "jpeg" : ext, outputFile);
         } else if (AUDIO_EXTS.contains(ext)) {
             Files.write(outputFile.toPath(), bytes);
