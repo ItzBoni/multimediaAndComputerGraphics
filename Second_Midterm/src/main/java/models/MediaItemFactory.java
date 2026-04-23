@@ -7,11 +7,33 @@ import java.io.File;
 import java.time.LocalDateTime;
 
 /**
- * Responsible for building fully-initialised MediaItem instances.
- * Keeps orchestration logic (external tool calls) out of the MediaItem data model.
+ * Factory for creating fully-initialized MediaItem instances.
+ *
+ * Orchestrates the complete initialization process:
+ * - Extracting representative frames from videos
+ * - Converting HEIC format to JPEG
+ * - Extracting EXIF metadata (GPS, date)
+ * - Populating all MediaItem fields
+ *
+ * Keeps complex initialization logic and external tool calls
+ * out of the MediaItem data model itself.
  */
 public class MediaItemFactory {
 
+    /**
+     * Creates a fully-initialized MediaItem from a file path.
+     *
+     * Performs the following operations:
+     * 1. Creates base MediaItem with file reference
+     * 2. For videos: extracts representative frame at 00:00:01
+     * 3. For HEIC images: converts to JPEG using FFmpeg
+     * 4. Extracts EXIF metadata (GPS, creation date) using ExifTool
+     * 5. Parses extracted metadata and populates MediaItem
+     *
+     * @param fileLocation absolute or relative path to the media file
+     * @return fully-initialized MediaItem with all metadata extracted
+     * @throws RuntimeException if file processing or tool execution fails
+     */
     public static MediaItem create(String fileLocation) {
         File file = new File(fileLocation);
         MediaItem item = new MediaItem(file);

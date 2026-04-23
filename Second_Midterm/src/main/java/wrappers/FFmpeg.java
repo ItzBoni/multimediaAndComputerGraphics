@@ -3,11 +3,29 @@ package wrappers;
 import java.io.*;
 
 /**
- * Responsible for wrapping single-file FFmpeg CLI operations.
- * Multi-file stitching pipeline lives in VideoStitcher.
+ * Wrapper for FFmpeg CLI operations.
+ *
+ * Handles single-file operations:
+ * - Extracting representative frames from videos
+ * - Converting HEIC/HEIF images to JPEG
+ *
+ * Multi-file video stitching is handled by VideoStitcher.
+ *
+ * Executes FFmpeg as a subprocess and captures output.
+ * Requires FFmpeg to be installed and available in PATH.
  */
 public class FFmpeg {
 
+    /**
+     * Extracts a representative frame from a video file.
+     *
+     * Saves a single frame at 00:00:01 (1 second mark) as JPEG.
+     * Used as thumbnail/representative image for the video.
+     *
+     * @param videoFile the video file to extract from
+     * @param outputDirectory the path where the frame will be saved
+     * @throws RuntimeException if FFmpeg execution fails
+     */
     public static void saveRepresentativeFrame(File videoFile, String outputDirectory) {
         ProcessBuilder pb = new ProcessBuilder(
                 "ffmpeg",
@@ -39,6 +57,17 @@ public class FFmpeg {
         System.out.println(response.toString());
     }
 
+    /**
+     * Converts a HEIC/HEIF image file to JPEG format.
+     *
+     * HEIC is Apple's modern image format. This conversion ensures compatibility
+     * with broader image processing tools and APIs.
+     *
+     * @param inputFile the HEIC/HEIF image file to convert
+     * @param outputPath the path where the converted JPEG will be saved
+     * @return File object pointing to the converted JPEG file
+     * @throws RuntimeException if FFmpeg execution fails
+     */
     public static File convertHeicToJpeg(File inputFile, String outputPath) {
         ProcessBuilder pb = new ProcessBuilder(
                 "ffmpeg",

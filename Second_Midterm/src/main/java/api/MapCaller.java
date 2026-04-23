@@ -8,17 +8,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Responsible for making HTTP requests to the Geoapify static map API.
+ * Wrapper for Geoapify static map API.
+ *
+ * Generates map images showing the geographic journey between two points.
+ * Handles:
+ * - Computing optimal map center point
+ * - Calculating appropriate zoom level
+ * - Creating map request with start/end markers
+ *
  * Geographic calculations are delegated to GeoUtils.
+ * Loads API key from .env file at initialization.
  */
 public class MapCaller extends Connectable {
     private String apiKey;
 
+    /**
+     * Initializes MapCaller and loads Geoapify API key from environment.
+     * Reads MAP_API_KEY from .env file.
+     */
     public MapCaller() {
         Dotenv dotenv = Dotenv.load();
         setApiKey(dotenv.get("MAP_API_KEY"));
     }
 
+    /**
+     * Generates a map image showing the route between two geographic points.
+     *
+     * Creates a static map with:
+     * - Red marker at start coordinates
+     * - Blue marker at end coordinates
+     * - Optimal zoom level and center point for the route
+     *
+     * @param startCoords [latitude, longitude] of journey start
+     * @param endCoords [latitude, longitude] of journey end
+     * @return raw PNG image bytes of the generated map
+     */
     public byte[] mapRequest(double[] startCoords, double[] endCoords) {
         double[] centerCoords = GeoUtils.calculateMapCenter(startCoords, endCoords);
         int zoomLevel         = GeoUtils.calculateZoom(startCoords, endCoords);
@@ -61,6 +85,17 @@ public class MapCaller extends Connectable {
         return RequestHandler.sendHttpRequestBytes(url, "POST", jsonBody, headers);
     }
 
+    /**
+     * Sets the Geoapify API key for authentication.
+     *
+     * @param token the API key to use
+     */
     public void setApiKey(String token) { this.apiKey = token; }
-    public String getApiKey()           { return this.apiKey; }
+
+    /**
+     * Gets the current Geoapify API key.
+     *
+     * @return the API key
+     */
+    public String getApiKey() { return this.apiKey; }
 }

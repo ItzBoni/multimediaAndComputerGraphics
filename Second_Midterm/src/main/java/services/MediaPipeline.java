@@ -12,19 +12,41 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
- * Responsible for orchestrating the full media-to-video generation pipeline.
- * Keeps business logic out of the App entry point.
+ * Orchestrates the complete media-to-video generation pipeline.
+ *
+ * Pipeline steps:
+ * 1. Sort media files chronologically
+ * 2. Generate AI descriptions for each item
+ * 3. Merge descriptions into unified narrative
+ * 4. Generate text-to-speech audio narration
+ * 5. Generate representative image from descriptions
+ * 6. Generate map visualization of geographic route
+ * 7. Assemble all elements into final video
+ *
+ * Coordinates interaction between API clients (AI, Map),
+ * conversion handlers, and tool wrappers (FFmpeg, VideoStitcher).
+ *
+ * Keeps business logic separated from the App entry point.
  */
 public class MediaPipeline {
 
     private final AICaller ai;
     private final MapCaller map;
 
+    /**
+     * Initializes the pipeline with API clients.
+     */
     public MediaPipeline() {
         this.ai  = new AICaller();
         this.map = new MapCaller();
     }
 
+    /**
+     * Executes the complete media-to-video generation pipeline.
+     *
+     * @param elements list of media items to process (with metadata)
+     * @param projectDirectory output directory for generated files
+     */
     public void run(ArrayList<MediaItem> elements, String projectDirectory) {
         sortByDate(elements);
 
@@ -68,6 +90,13 @@ public class MediaPipeline {
         VideoStitcher.stitch(elements, projectDirectory, audioFile);
     }
 
+    /**
+     * Sorts media items chronologically by creation date.
+     *
+     * Ensures the narrative follows a logical temporal sequence.
+     *
+     * @param items the list of media items to sort in-place
+     */
     private static void sortByDate(ArrayList<MediaItem> items) {
         items.sort(Comparator.comparing(MediaItem::getCreatedAt));
     }

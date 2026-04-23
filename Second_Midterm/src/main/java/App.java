@@ -7,12 +7,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Entry point. Responsible only for collecting user input and handing off to MediaPipeline.
+ * Entry point for the AI Video Generator application.
+ *
+ * Responsible for:
+ * - Displaying welcome message and user interface
+ * - Collecting user input for output directory
+ * - Gathering media file paths from the user
+ * - Validating inputs and displaying summary
+ * - Handing off to MediaPipeline for processing
+ *
+ * All business logic is delegated to specialized classes (MediaPipeline, MediaItemFactory).
  */
 public class App {
     private static final String SEPARATOR = "═".repeat(70);
     private static final String LIGHT_SEPARATOR = "─".repeat(70);
 
+    /**
+     * Main entry point for the application.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         ArrayList<MediaItem> elements = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
@@ -31,12 +45,22 @@ public class App {
         }
     }
 
+    /**
+     * Displays welcome message with formatted separator.
+     */
     private static void printWelcome() {
         System.out.println("\n" + SEPARATOR);
         System.out.println("   🎬 Welcome to the AI Video Generator! 🎬");
         System.out.println(SEPARATOR);
     }
 
+    /**
+     * Prompts user for output directory path and validates it.
+     * Creates the directory if it doesn't exist.
+     *
+     * @param sc Scanner for reading user input
+     * @return validated absolute path to output directory (with trailing separator)
+     */
     private static String getProjectDirectory(Scanner sc) {
         System.out.println("\n📁 PROJECT OUTPUT DIRECTORY");
         System.out.println(LIGHT_SEPARATOR);
@@ -73,6 +97,14 @@ public class App {
         }
     }
 
+    /**
+     * Prompts user to enter media file paths and validates each file.
+     * Continues until user types 'done'.
+     * Uses MediaItemFactory to create fully initialized MediaItem objects.
+     *
+     * @param sc Scanner for reading user input
+     * @param elements ArrayList to populate with validated MediaItem objects
+     */
     private static void getMediaFiles(Scanner sc, ArrayList<MediaItem> elements) {
         System.out.println("\n📸 ADD MEDIA FILES");
         System.out.println(LIGHT_SEPARATOR);
@@ -113,6 +145,12 @@ public class App {
         } while (true);
     }
 
+    /**
+     * Displays a summary of the selected media files and output directory.
+     *
+     * @param elements ArrayList of validated MediaItem objects
+     * @param projectDirectory path to the output directory
+     */
     private static void printSummary(ArrayList<MediaItem> elements, String projectDirectory) {
         System.out.println("\n" + SEPARATOR);
         System.out.println("   📋 SUMMARY");

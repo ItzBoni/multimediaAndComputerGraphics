@@ -6,18 +6,46 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Wrapper for OpenAI API endpoints.
+ *
+ * Provides methods for:
+ * - Analyzing images with GPT-4 Vision
+ * - Merging multiple descriptions into unified text
+ * - Converting text to speech
+ * - Generating images from prompts
+ *
+ * Loads API key from .env file at initialization.
+ */
 public class AICaller extends Connectable{
     private String apiKey;
 
+    /**
+     * Initializes AICaller and loads OpenAI API key from environment.
+     * Reads OPENAI_API_KEY from .env file.
+     */
     public AICaller(){
         Dotenv dotenv = Dotenv.load();
         setApiKey(dotenv.get("OPENAI_API_KEY"));
     }
 
+    /**
+     * Sets the OpenAI API key for authentication.
+     *
+     * @param token the API key to use for requests
+     */
     public void setApiKey(String token){
         this.apiKey = token;
     }
 
+    /**
+     * Merges multiple media descriptions into a single unified narrative.
+     *
+     * Uses GPT-4 mini to create coherent text from multiple disparate descriptions.
+     *
+     * @param descriptions concatenated descriptions from multiple media items
+     * @return unified description suitable for narration
+     */
     public String mergeDescriptions(String descriptions){
         String safeDescriptions = escapeJson(descriptions);
 
@@ -44,8 +72,16 @@ public class AICaller extends Connectable{
     }
 
 
+    /**
+     * Generates a descriptive text for an image using GPT-4 Vision.
+     *
+     * Prompts the AI to write 1-2 fluent spoken sentences describing the image
+     * in present tense, as if narrating a slideshow segment.
+     *
+     * @param base64Image base64-encoded image data
+     * @return AI-generated description (1-2 sentences)
+     */
     public String descriptionRequest(String base64Image){
-        //Building the body with the variables we receive as arguments
         String jsonBody = """
         {
             "model": "gpt-4o-mini",
@@ -84,10 +120,15 @@ public class AICaller extends Connectable{
         return parseResponse(apiResponse);
     }
 
+    /**
+     * Converts text to speech audio using OpenAI's text-to-speech engine.
+     *
+     * @param description text to convert to audio
+     * @return raw MP3 audio bytes
+     */
     public byte[] audioRequest(String description){
         String safeDescription = escapeJson(description);
 
-        //Building the body with the variables we receive as arguments
         String jsonBody = """
         {
           "model": "gpt-4o-mini-tts",
@@ -107,10 +148,17 @@ public class AICaller extends Connectable{
         );
     }
 
+    /**
+     * Generates an image based on a text description using DALL-E 3.
+     *
+     * Creates a 1024x1536 image at low quality for faster generation.
+     *
+     * @param description text prompt describing the desired image
+     * @return base64-encoded PNG image data
+     */
     public String imageRequest(String description){
         String safeDescription = escapeJson(description);
 
-        //Building the body with the variables we receive as arguments
         String jsonBody = """
             {
               "model": "gpt-image-1-mini",
@@ -134,6 +182,18 @@ public class AICaller extends Connectable{
         return parseResponse(response);
     }
 
+    /**
+     * Parses OpenAI API response to extract content data.
+     *
+     * Handles two response formats:
+     * - Base64-encoded binary data (images, audio)
+     * - Text content (descriptions)
+     *
+     * Unescapes special characters in text responses.
+     *
+     * @param apiResponse raw JSON response from OpenAI API
+     * @return extracted content (base64 data or text string)
+     */
     private static String parseResponse(String apiResponse) {
         String b64Marker = "\"b64_json\": \"";
         int b64Index = apiResponse.indexOf(b64Marker);
@@ -142,8 +202,6 @@ public class AICaller extends Connectable{
             int end = apiResponse.indexOf("\"", start);
             return apiResponse.substring(start, end);
         }
-
-        // Fall back to text content parsing
         int messageIndex = apiResponse.indexOf("\"message\"");
         String marker = "\"content\": \"";
 

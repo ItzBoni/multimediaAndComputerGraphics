@@ -7,11 +7,28 @@ import java.time.ZoneId;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parser for extracting metadata from raw ExifTool output.
+ *
+ * Handles:
+ * - GPS coordinate extraction and conversion (DMS to decimal degrees)
+ * - Creation date/time parsing from multiple EXIF tags
+ * - Fallback to file modification date
+ *
+ * ExifTool outputs metadata as flat text lines with format: "TagName: value"
+ */
 public class MetadataParser {
+
     /**
-     * Extracts a GPS coordinate from the flat exiftool output string.
-     * Exiftool default format: "19 deg 26' 0.00\" N"
-     * Converts DMS → decimal degrees; negates for S or W.
+     * Extracts and converts a GPS coordinate from ExifTool output.
+     *
+     * Searches for a specific GPS tag (e.g., "GPS Latitude") in the output.
+     * Parses DMS format: "19 deg 26' 0.00\" N"
+     * Converts to decimal degrees and applies direction (S/W = negative).
+     *
+     * @param raw the complete ExifTool output string
+     * @param tagName the GPS tag to search for (e.g., "GPS Latitude")
+     * @return decimal degrees value, or 0.0 if not found
      */
     public static double parseGPS(String raw, String tagName) {
         int searchFrom = 0;
@@ -55,9 +72,18 @@ public class MetadataParser {
     }
 
     /**
-     * Extracts a creation timestamp from the flat exiftool output string.
-     * Tries several common EXIF date tags in priority order.
-     * Exiftool default format: "2024:03:15 14:22:01"
+     * Extracts a creation timestamp from ExifTool output.
+     *
+     * Tries multiple EXIF date tags in priority order:
+     * 1. Create Date
+     * 2. Date/Time Original
+     * 3. Date Created
+     * 4. File Creation Date/Time
+     *
+     * Parses format: "2024:03:15 14:22:01" (YYYY:MM:DD HH:MM:SS)
+     *
+     * @param raw the complete ExifTool output string
+     * @return parsed LocalDateTime, or null if no valid date found
      */
     public static LocalDateTime parseDate(String raw) {
         String[] candidates = {"Create Date", "Date/Time Original", "Date Created", "File Creation Date/Time"};
@@ -92,7 +118,15 @@ public class MetadataParser {
         return null;
     }
 
-    /** Falls back to the file's last-modified timestamp when no EXIF date exists. */
+    /**
+     * Gets the file's last-modified timestamp as a fallback date.
+     *
+     * Used when no EXIF date information is available in the file.
+     * Converts file modification time to system default timezone.
+     *
+     * @param f the file to get modification time from
+     * @return LocalDateTime of file's last modification in system timezone
+     */
     public static LocalDateTime fallbackTime(File f) {
         return LocalDateTime.ofInstant(
                 Instant.ofEpochMilli(f.lastModified()), ZoneId.systemDefault());

@@ -5,7 +5,31 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Wrapper for ExifTool CLI.
+ *
+ * Extracts metadata from media files including:
+ * - GPS coordinates (latitude, longitude)
+ * - Creation dates
+ * - Camera information
+ * - File details
+ *
+ * Requires ExifTool to be installed and accessible in PATH.
+ */
 public class ExifTool {
+
+    /**
+     * Extracts all available metadata from a media file.
+     *
+     * Returns raw ExifTool output as plain text with format:
+     * "TagName: value"
+     *
+     * Output is parsed by MetadataParser to extract specific fields.
+     *
+     * @param fileLocation path to the media file
+     * @return complete metadata output as a multiline string
+     * @throws RuntimeException if ExifTool execution fails
+     */
     public static String extractMetadata(String fileLocation){
         String metadata = null;
         StringBuilder response = new StringBuilder();
