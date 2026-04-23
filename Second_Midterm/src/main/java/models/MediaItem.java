@@ -65,4 +65,8 @@ public class MediaItem {
     public String getDescription()                       { return description; }
     public File getRepresentativeFrame()                 { return representativeFrame; }
     public File getFile()                                { return file; }
+
+    public String getFilePath() {
+        return this.file.getPath();
+    }
 }
