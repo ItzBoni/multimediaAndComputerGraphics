@@ -36,38 +36,13 @@ public class AICaller extends Connectable{
                   },
                   {
                     "type": "text",
-                    "text": "Generate a 3 second description of this image."
+                    "text": "You are narrating a photo slideshow segment. Write 1-2 fluent, spoken sentences describing this image. Use present tense, vivid but brief language. Write as if this is one moment in a continuous story — no opening greetings, no closing remarks, just the narration."
                   }
                 ]
               }
             ],
             "max_tokens": 100
         }""".formatted(base64Image);
-
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("Authorization", "Bearer " + apiKey.trim());
-
-        String apiResponse =  RequestHandler.sendHttpRequest(
-                "https://api.openai.com/v1/chat/completions",
-                "POST",
-                jsonBody,
-                headers
-        );
-
-        return parseResponse(apiResponse);
-    }
-
-    public String mergeDescriptions(String descriptions){
-        String safeDescriptions = escapeJson(descriptions);
-
-        String jsonBody = """
-        {
-           "model": "gpt-4o-mini",
-           "messages": [
-             {"role": "user", "content": "Generate a unified description based on the following text. No notes, only text.: %s"}
-           ]
-         }""".formatted(safeDescriptions);
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");

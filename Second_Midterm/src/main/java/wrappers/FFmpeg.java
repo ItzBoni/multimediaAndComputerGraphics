@@ -1,12 +1,14 @@
 package wrappers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
+/**
+ * Responsible for wrapping single-file FFmpeg CLI operations.
+ * Multi-file stitching pipeline lives in VideoStitcher.
+ */
 public class FFmpeg {
-    public static void saveRepresentativeFrame(File videoFile, String outputDirectory){
+
+    public static void saveRepresentativeFrame(File videoFile, String outputDirectory) {
         ProcessBuilder pb = new ProcessBuilder(
                 "ffmpeg",
                 "-y",
@@ -34,8 +36,6 @@ public class FFmpeg {
             throw new RuntimeException(e);
         }
 
-        String answer = response.toString();
-
-        System.out.println(answer);
+        System.out.println(response.toString());
     }
 }

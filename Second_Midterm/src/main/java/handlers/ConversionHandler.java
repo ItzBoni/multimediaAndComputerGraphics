@@ -30,12 +30,11 @@ public class ConversionHandler {
         }
     }
 
-    public static File decodeByteResponse(byte[] bytes, File outputFile) {
+    public static void decodeByteResponse(byte[] bytes, File outputFile) {
         try {
-            return writeToFile(bytes, outputFile);
+            writeToFile(bytes, outputFile);
         } catch (Exception e) {
             System.err.println("Decoding failed: " + e.getMessage());
-            return null;
         }
     }
 
